@@ -14,18 +14,25 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.hello
+package uk.gov.hmrc.play.events
 
-import org.scalatest.Matchers._
-import org.scalatest.WordSpecLike
+import uk.gov.hmrc.play.audit.model.{DataEvent, AuditEvent}
 
+trait Recordable
 
-class HelloWorldSpecs extends WordSpecLike {
+trait Auditable extends Recordable {
 
-  "HelloWorld" should {
+  def auditSource: String
+  def auditType: String
+  def tags: Map[String, String]
+  def details: Map[String, String]
 
-    "say hello" in {
-      HelloWorld.sayHello shouldBe "hello"
-    }
-  }
+  val event: AuditEvent = DataEvent(auditSource = auditSource,
+    auditType = auditType,
+    tags = tags,
+    detail = details)
+}
+
+trait Loggable extends Recordable {
+  def log: String
 }

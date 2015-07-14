@@ -14,13 +14,18 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.hello
+package uk.gov.hmrc.play.events
 
-object HelloWorld {
+import uk.gov.hmrc.play.audit.http.HeaderCarrier
 
-  def main(args: Array[String]) {
-    println(sayHello)
-  }
+trait DefaultEventRecorder extends EventRecorder {
+  override def eventHandlers: Set[EventHandler] = Set(DefaultAuditEventHandler, DefaultLoggerEventHandler)
+}
 
-  def sayHello:String = "hello"
+trait EventRecorder {
+
+  def eventHandlers: Set[EventHandler]
+
+  def record(recordable: Recordable)(implicit hc: HeaderCarrier): Unit =
+    eventHandlers.foreach(eh => eh.handle(recordable))
 }
