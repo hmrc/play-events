@@ -14,13 +14,22 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.hello
+package uk.gov.hmrc.play.events
 
-object HelloWorld {
+import play.api.Logger
 
-  def main(args: Array[String]) {
-    println(sayHello)
+object DefaultLoggerEventHandler extends LoggerEventHandler {
+
+  def handleLoggable(loggable: Loggable) = Logger.info(s"event::logger::${loggable.log}")
+}
+
+trait LoggerEventHandler extends EventHandler {
+
+  def handleLoggable(loggable: Loggable)
+
+  override def handle(event: Recordable): Unit = event match {
+    case loggable: Loggable => handleLoggable(loggable)
+    case _ =>
   }
 
-  def sayHello:String = "hello"
 }

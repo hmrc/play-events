@@ -14,18 +14,22 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.hello
+package uk.gov.hmrc.play.events
 
-import org.scalatest.Matchers._
-import org.scalatest.WordSpecLike
+import play.api.Logger
 
+object DefaultMetricsEventHandler extends MetricsEventHandler {
+  override def handleMeasurable(measurable: Measurable) = Logger.info(s"metric::${measurable.source}::${measurable.name}::${measurable.details}")
+}
 
-class HelloWorldSpecs extends WordSpecLike {
+trait MetricsEventHandler extends EventHandler {
 
-  "HelloWorld" should {
+  def handleMeasurable(measurable: Measurable)
 
-    "say hello" in {
-      HelloWorld.sayHello shouldBe "hello"
+  override def handle(event: Recordable) = {
+    event match {
+      case measurable: Measurable => handleMeasurable(measurable)
+      case _ =>
     }
   }
 }

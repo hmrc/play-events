@@ -16,9 +16,12 @@ object HmrcBuild extends Build {
     .settings(
       name := appName,
       targetJvm := "jvm-1.7",
+      crossScalaVersions := Seq("2.11.5"),
       libraryDependencies ++= Seq(
+        Compile.httpVerbs,
         Test.scalaTest,
-        Test.pegdown
+        Test.pegdown,
+        Test.mockito
       ),
       Developers()
     )
@@ -27,10 +30,12 @@ object HmrcBuild extends Build {
 private object BuildDependencies {
 
   object Compile {
+    val httpVerbs = "uk.gov.hmrc" %% "http-verbs" % "1.8.0" % "provided"
   }
 
   sealed abstract class Test(scope: String) {
     val scalaTest = "org.scalatest" %% "scalatest" % "2.2.4" % scope
+    val mockito = "org.mockito" % "mockito-all" % "1.9.5" % scope
     val pegdown = "org.pegdown" % "pegdown" % "1.5.0" % scope
   }
 
