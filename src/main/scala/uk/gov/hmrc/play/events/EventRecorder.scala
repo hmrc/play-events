@@ -17,7 +17,7 @@
 package uk.gov.hmrc.play.events
 
 trait DefaultEventRecorder extends EventRecorder {
-  override def eventHandlers: Set[EventHandler] = Set(DefaultAuditEventHandler, DefaultLoggerEventHandler)
+  override def eventHandlers: Set[EventHandler] = Set(DefaultLoggerEventHandler, DefaultMetricsEventHandler, DefaultAlertEventHandler)
 }
 
 trait EventRecorder {

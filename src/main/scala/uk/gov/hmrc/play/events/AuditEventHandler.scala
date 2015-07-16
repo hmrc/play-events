@@ -17,7 +17,6 @@
 package uk.gov.hmrc.play.events
 
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
-import uk.gov.hmrc.play.audit.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 
 import scala.concurrent.Future
@@ -40,8 +39,4 @@ trait AuditEventHandler extends EventHandler {
     }
   }
 
-}
-
-object DefaultAuditEventHandler extends AuditEventHandler {
-  override val auditConnector: AuditConnector = uk.gov.hmrc.play.config.AuditConnector
 }
