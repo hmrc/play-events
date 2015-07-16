@@ -16,24 +16,26 @@
 
 package uk.gov.hmrc.play.events
 
-import uk.gov.hmrc.play.audit.http.connector.AuditConnector
-import uk.gov.hmrc.play.audit.http.HeaderCarrier
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
+import uk.gov.hmrc.play.audit.http.HeaderCarrier
+import uk.gov.hmrc.play.audit.http.connector.AuditConnector
+
 import scala.concurrent.Future
 
 trait AuditEventHandler extends EventHandler {
 
   def auditConnector: AuditConnector
 
-  override def handle(recordable: Recordable)(implicit hc: HeaderCarrier) = {
+  override def handle(recordable: Recordable) = {
     recordable match {
       case event: Auditable => handleAudit(event)
       case _ =>
     }
   }
 
-  def handleAudit(auditable: Auditable)(implicit hc: HeaderCarrier): Unit = {
+  def handleAudit(auditable: Auditable): Unit = {
     Future {
+      implicit val hc = auditable.headerCarrier
       auditConnector.sendEvent(auditable.event)
     }
   }

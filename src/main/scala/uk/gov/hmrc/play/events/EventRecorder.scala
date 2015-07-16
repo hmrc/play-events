@@ -16,8 +16,6 @@
 
 package uk.gov.hmrc.play.events
 
-import uk.gov.hmrc.play.audit.http.HeaderCarrier
-
 trait DefaultEventRecorder extends EventRecorder {
   override def eventHandlers: Set[EventHandler] = Set(DefaultAuditEventHandler, DefaultLoggerEventHandler)
 }
@@ -26,6 +24,6 @@ trait EventRecorder {
 
   def eventHandlers: Set[EventHandler]
 
-  def record(recordable: Recordable)(implicit hc: HeaderCarrier): Unit =
+  def record(recordable: Recordable): Unit =
     eventHandlers.foreach(eh => eh.handle(recordable))
 }

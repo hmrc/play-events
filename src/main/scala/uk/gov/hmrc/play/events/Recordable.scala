@@ -16,23 +16,53 @@
 
 package uk.gov.hmrc.play.events
 
-import uk.gov.hmrc.play.audit.model.{DataEvent, AuditEvent}
+import uk.gov.hmrc.play.audit.http.HeaderCarrier
+import uk.gov.hmrc.play.audit.model.{AuditEvent, DataEvent}
 
 trait Recordable
 
 trait Auditable extends Recordable {
 
-  def auditSource: String
-  def auditType: String
+  def source: String
+  def name: String
   def tags: Map[String, String]
   def details: Map[String, String]
+  def headerCarrier: HeaderCarrier
 
-  val event: AuditEvent = DataEvent(auditSource = auditSource,
-    auditType = auditType,
-    tags = tags,
-    detail = details)
+  val event: AuditEvent =
+    DataEvent(
+      auditSource = source,
+      auditType = name,
+      tags = tags,
+      detail = details)
 }
 
 trait Loggable extends Recordable {
   def log: String
+}
+
+trait Measurable extends Recordable {
+
+  def source: String
+  def name: String
+  def details: Map[String, String]
+
+}
+
+object AlertLevel extends Enumeration {
+
+  type AlertLevel = Value
+  val WARNING, CRITICAL = Value
+
+}
+
+import AlertLevel._
+
+trait Alertable extends Recordable {
+
+  def source: String
+  def name: String
+  def level: AlertLevel
+  def details: Map[String, String]
+
 }

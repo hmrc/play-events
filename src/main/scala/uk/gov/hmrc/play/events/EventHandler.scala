@@ -16,8 +16,6 @@
 
 package uk.gov.hmrc.play.events
 
-import uk.gov.hmrc.play.audit.http.HeaderCarrier
-
 trait EventHandler {
-  def handle(recordable: Recordable)(implicit hc: HeaderCarrier)
+  def handle(recordable: Recordable)
 }

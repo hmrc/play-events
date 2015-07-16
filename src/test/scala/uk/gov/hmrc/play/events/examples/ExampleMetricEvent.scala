@@ -14,22 +14,23 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.play.events
+package uk.gov.hmrc.play.events.examples
 
-import play.api.Logger
+import uk.gov.hmrc.play.events.Measurable
 
-object DefaultLoggerEventHandler extends LoggerEventHandler {
+case class ExampleMetricEvent(source: String,
+                              name: String,
+                              details: Map[String, String]) extends Measurable
 
-  def handleLoggable(loggable: Loggable) = Logger.info(s"event::logger::${loggable.log}")
-}
+object ExampleMetricEvent {
 
-trait LoggerEventHandler extends EventHandler {
-
-  def handleLoggable(loggable: Loggable)
-
-  override def handle(event: Recordable): Unit = event match {
-    case loggable: Loggable => handleLoggable(loggable)
-    case _ =>
-  }
+  def apply(fileId: String, fileType: String) =
+    new ExampleMetricEvent(
+      source = "TestApp",
+      name = "NumberOfCreatedFilings",
+      details = Map (
+      "File ID" -> fileId,
+      "File Type" -> fileType
+    ))
 
 }

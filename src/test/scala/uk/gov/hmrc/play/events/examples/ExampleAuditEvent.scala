@@ -14,23 +14,26 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.play.events
+package uk.gov.hmrc.play.events.examples
 
 import uk.gov.hmrc.play.audit.http.HeaderCarrier
+import uk.gov.hmrc.play.events.Auditable
 
-case class ExampleAuditEvent(auditSource: String,
-                             auditType: String,
+case class ExampleAuditEvent(source: String,
+                             name: String,
                              tags: Map[String, String],
-                             details: Map[String, String]) extends Auditable
+                             details: Map[String, String],
+                             headerCarrier: HeaderCarrier) extends Auditable
 
 object ExampleAuditEvent {
 
   def apply(testCount: Int, testName: String)(implicit hc: HeaderCarrier): ExampleAuditEvent =
     ExampleAuditEvent(
-      auditSource = "example-source",
-      auditType = "test-conducted",
+      source = "example-source",
+      name = "test-conducted",
       tags = Map(hc.toAuditTags("testConducted", "/your-web-app/example-path/").toSeq: _*),
-      details = hc.toAuditDetails() ++ buildAuditData(testCount, testName)
+      details = hc.toAuditDetails() ++ buildAuditData(testCount, testName),
+      headerCarrier = hc
     )
 
   private def buildAuditData(count: Int, name: String) = {

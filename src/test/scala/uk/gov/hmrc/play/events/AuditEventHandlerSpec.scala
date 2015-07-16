@@ -22,6 +22,7 @@ import org.scalatest.mock.MockitoSugar
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import uk.gov.hmrc.play.audit.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
+import uk.gov.hmrc.play.events.examples.ExampleAuditEvent
 
 
 class AuditEventHandlerSpec extends WordSpec with MockitoSugar {

@@ -18,17 +18,16 @@ package uk.gov.hmrc.play.events
 
 import play.api.Logger
 
-object DefaultLoggerEventHandler extends LoggerEventHandler {
-
-  def handleLoggable(loggable: Loggable) = Logger.info(s"event::logger::${loggable.log}")
+object DefaultAlertEventHandler extends AlertEventHandler {
+  override def handleAlertable(alertable: Alertable) = Logger.info(s"alert:${alertable.level}::${alertable.source}::${alertable.name}::${alertable.details}")
 }
 
-trait LoggerEventHandler extends EventHandler {
+trait AlertEventHandler extends EventHandler {
 
-  def handleLoggable(loggable: Loggable)
+  def handleAlertable(alertable: Alertable)
 
   override def handle(event: Recordable): Unit = event match {
-    case loggable: Loggable => handleLoggable(loggable)
+    case alertable: Alertable => handleAlertable(alertable)
     case _ =>
   }
 
