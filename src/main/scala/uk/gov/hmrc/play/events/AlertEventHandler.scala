@@ -19,7 +19,7 @@ package uk.gov.hmrc.play.events
 import play.api.Logger
 
 object DefaultAlertEventHandler extends AlertEventHandler {
-  override def handleAlertable(alertable: Alertable) = Logger.info(s"alert:${alertable.level}::${alertable.source}::${alertable.name}::${alertable.details}")
+  override def handleAlertable(alertable: Alertable) = Logger.info(s"alert:${alertable.level}:team:${alertable.team}:source:${alertable.source}:name:${alertable.name}:data:${alertable.data}")
 }
 
 trait AlertEventHandler extends EventHandler {

@@ -22,8 +22,7 @@ import uk.gov.hmrc.play.events.Auditable
 case class ExampleAuditEvent(source: String,
                              name: String,
                              tags: Map[String, String],
-                             details: Map[String, String],
-                             headerCarrier: HeaderCarrier) extends Auditable
+                             privateData: Map[String, String]) extends Auditable
 
 object ExampleAuditEvent {
 
@@ -32,8 +31,7 @@ object ExampleAuditEvent {
       source = "example-source",
       name = "test-conducted",
       tags = Map(hc.toAuditTags("testConducted", "/your-web-app/example-path/").toSeq: _*),
-      details = hc.toAuditDetails() ++ buildAuditData(testCount, testName),
-      headerCarrier = hc
+      privateData = hc.toAuditDetails() ++ buildAuditData(testCount, testName)
     )
 
   private def buildAuditData(count: Int, name: String) = {

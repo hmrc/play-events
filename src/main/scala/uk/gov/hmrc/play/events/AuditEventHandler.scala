@@ -17,11 +17,12 @@
 package uk.gov.hmrc.play.events
 
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
+import uk.gov.hmrc.play.audit.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 
 import scala.concurrent.Future
 
-trait AuditEventHandler extends EventHandler {
+abstract class AuditEventHandler(implicit headerCarrier: HeaderCarrier) extends EventHandler {
 
   def auditConnector: AuditConnector
 
@@ -34,7 +35,6 @@ trait AuditEventHandler extends EventHandler {
 
   def handleAudit(auditable: Auditable): Unit = {
     Future {
-      implicit val hc = auditable.headerCarrier
       auditConnector.sendEvent(auditable.event)
     }
   }

@@ -31,7 +31,7 @@ class CombinedEventSpec extends WordSpec with Matchers with MockitoSugar {
     "be handled by all event handlers" in {
       implicit val hc = new HeaderCarrier()
 
-      val combinedEvent = ExampleCombinedEvent("TestFilingId", "More Info")
+      val combinedEvent = ExampleCombinedEvent("TestFilingId", "More Info", "cleverPassword")
 
       val mockAuditConnector = mock[AuditConnector]
 
