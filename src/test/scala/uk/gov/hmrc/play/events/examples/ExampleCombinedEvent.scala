@@ -23,8 +23,8 @@ import uk.gov.hmrc.play.events._
 case class ExampleCombinedEvent(source: String,
                                 name: String,
                                 tags: Map[String, String],
-                                details: Map[String, String],
-                                headerCarrier: HeaderCarrier,
+                                privateData: Map[String, String],
+                                data: Map[String, String],
                                 level: AlertLevel) extends Auditable with Measurable with Loggable with Alertable {
 
  override def log = "Combined Event occurred"
@@ -33,12 +33,16 @@ case class ExampleCombinedEvent(source: String,
 
 object ExampleCombinedEvent {
 
-  def apply(filingID: String, otherFilingInfo: String)(implicit hc: HeaderCarrier) = new ExampleCombinedEvent(
+  def apply(filingID: String, otherFilingInfo: String, userPassword: String)(implicit hc: HeaderCarrier) = new ExampleCombinedEvent(
     source = "test-app",
     name = "CombinedEvent",
     tags = Map(hc.toAuditTags("testConducted", "/your-web-app/example-path/").toSeq: _*),
-    details = hc.toAuditDetails() ++ Map("Filing ID" -> filingID, "Filing Info" -> otherFilingInfo),
-    headerCarrier = hc,
+    privateData = Map("Password" -> userPassword) ++ generateData(filingID, otherFilingInfo),
+    data = hc.toAuditDetails() ++ generateData(filingID, otherFilingInfo),
     AlertLevel.WARNING
   )
+
+  def generateData(filingID: String, otherFilingInfo: String): Map[String, String] = {
+    Map("Filing ID" -> filingID, "Filing Info" -> otherFilingInfo)
+  }
 }

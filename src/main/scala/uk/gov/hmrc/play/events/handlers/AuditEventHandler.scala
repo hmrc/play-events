@@ -14,27 +14,28 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.play.events
+package uk.gov.hmrc.play.events.handlers
 
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
+import uk.gov.hmrc.play.audit.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
+import uk.gov.hmrc.play.events.{Auditable, Recordable}
 
 import scala.concurrent.Future
 
-trait AuditEventHandler extends EventHandler {
+abstract class AuditEventHandler extends EventHandler {
 
   def auditConnector: AuditConnector
 
-  override def handle(recordable: Recordable) = {
+  override def handle(recordable: Recordable)(implicit headerCarrier: HeaderCarrier) = {
     recordable match {
       case event: Auditable => handleAudit(event)
       case _ =>
     }
   }
 
-  def handleAudit(auditable: Auditable): Unit = {
+  def handleAudit(auditable: Auditable)(implicit headerCarrier: HeaderCarrier): Unit = {
     Future {
-      implicit val hc = auditable.headerCarrier
       auditConnector.sendEvent(auditable.event)
     }
   }

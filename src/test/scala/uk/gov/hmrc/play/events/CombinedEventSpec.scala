@@ -23,6 +23,7 @@ import uk.gov.hmrc.play.audit.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.events.examples.ExampleCombinedEvent
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
+import uk.gov.hmrc.play.events.handlers._
 
 class CombinedEventSpec extends WordSpec with Matchers with MockitoSugar {
 
@@ -31,7 +32,7 @@ class CombinedEventSpec extends WordSpec with Matchers with MockitoSugar {
     "be handled by all event handlers" in {
       implicit val hc = new HeaderCarrier()
 
-      val combinedEvent = ExampleCombinedEvent("TestFilingId", "More Info")
+      val combinedEvent = ExampleCombinedEvent("TestFilingId", "More Info", "cleverPassword")
 
       val mockAuditConnector = mock[AuditConnector]
 

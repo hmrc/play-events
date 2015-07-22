@@ -20,7 +20,7 @@ import uk.gov.hmrc.play.events.Measurable
 
 case class ExampleMetricEvent(source: String,
                               name: String,
-                              details: Map[String, String]) extends Measurable
+                              data: Map[String, String]) extends Measurable
 
 object ExampleMetricEvent {
 
@@ -28,7 +28,7 @@ object ExampleMetricEvent {
     new ExampleMetricEvent(
       source = "TestApp",
       name = "NumberOfCreatedFilings",
-      details = Map (
+      data = Map (
       "File ID" -> fileId,
       "File Type" -> fileType
     ))

@@ -14,19 +14,21 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.play.events
+package uk.gov.hmrc.play.events.handlers
 
 import play.api.Logger
+import uk.gov.hmrc.play.audit.http.HeaderCarrier
+import uk.gov.hmrc.play.events.{Measurable, Recordable}
 
 object DefaultMetricsEventHandler extends MetricsEventHandler {
-  override def handleMeasurable(measurable: Measurable) = Logger.info(s"metric::${measurable.source}::${measurable.name}::${measurable.details}")
+  override def handleMeasurable(measurable: Measurable) = Logger.info(s"metric:source:${measurable.source}:name:${measurable.name}:data:${measurable.data}")
 }
 
 trait MetricsEventHandler extends EventHandler {
 
   def handleMeasurable(measurable: Measurable)
 
-  override def handle(event: Recordable) = {
+  override def handle(event: Recordable)(implicit headerCarrier: HeaderCarrier) = {
     event match {
       case measurable: Measurable => handleMeasurable(measurable)
       case _ =>

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.play.events
+package uk.gov.hmrc.play.events.handlers
 
 import org.mockito.Mockito._
 import org.scalatest.WordSpec
@@ -22,6 +22,7 @@ import org.scalatest.mock.MockitoSugar
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import uk.gov.hmrc.play.audit.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
+import uk.gov.hmrc.play.events.Loggable
 import uk.gov.hmrc.play.events.examples.ExampleAuditEvent
 
 

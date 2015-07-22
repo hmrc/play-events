@@ -26,15 +26,14 @@ trait Auditable extends Recordable {
   def source: String
   def name: String
   def tags: Map[String, String]
-  def details: Map[String, String]
-  def headerCarrier: HeaderCarrier
+  def privateData: Map[String, String]
 
   val event: AuditEvent =
     DataEvent(
       auditSource = source,
       auditType = name,
       tags = tags,
-      detail = details)
+      detail = privateData)
 }
 
 trait Loggable extends Recordable {
@@ -45,14 +44,14 @@ trait Measurable extends Recordable {
 
   def source: String
   def name: String
-  def details: Map[String, String]
+  def data: Map[String, String]
 
 }
 
 object AlertLevel extends Enumeration {
 
   type AlertLevel = Value
-  val WARNING, CRITICAL = Value
+  val WARNING, MINOR, MAJOR, CRITICAL = Value
 
 }
 
@@ -63,6 +62,5 @@ trait Alertable extends Recordable {
   def source: String
   def name: String
   def level: AlertLevel
-  def details: Map[String, String]
 
 }
