@@ -59,10 +59,8 @@ import AlertLevel._
 
 trait Alertable extends Recordable {
 
-  def team: String
   def source: String
   def name: String
   def level: AlertLevel
-  def data: Map[String, String]
 
 }

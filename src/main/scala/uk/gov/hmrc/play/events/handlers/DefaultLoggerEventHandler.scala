@@ -14,20 +14,23 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.play.events
+package uk.gov.hmrc.play.events.handlers
 
 import play.api.Logger
+import uk.gov.hmrc.play.audit.http.HeaderCarrier
+import uk.gov.hmrc.play.events.{Loggable, Recordable}
 
-object DefaultAlertEventHandler extends AlertEventHandler {
-  override def handleAlertable(alertable: Alertable) = Logger.info(s"alert:${alertable.level}:team:${alertable.team}:source:${alertable.source}:name:${alertable.name}:data:${alertable.data}")
+object DefaultLoggerEventHandler extends LoggerEventHandler {
+
+  def handleLoggable(loggable: Loggable) = Logger.info(s"event::logger::${loggable.log}")
 }
 
-trait AlertEventHandler extends EventHandler {
+trait LoggerEventHandler extends EventHandler {
 
-  def handleAlertable(alertable: Alertable)
+  def handleLoggable(loggable: Loggable)
 
-  override def handle(event: Recordable): Unit = event match {
-    case alertable: Alertable => handleAlertable(alertable)
+  override def handle(event: Recordable)(implicit headerCarrier: HeaderCarrier): Unit = event match {
+    case loggable: Loggable => handleLoggable(loggable)
     case _ =>
   }
 

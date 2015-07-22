@@ -25,7 +25,6 @@ case class ExampleCombinedEvent(source: String,
                                 tags: Map[String, String],
                                 privateData: Map[String, String],
                                 data: Map[String, String],
-                                team: String,
                                 level: AlertLevel) extends Auditable with Measurable with Loggable with Alertable {
 
  override def log = "Combined Event occurred"
@@ -40,7 +39,6 @@ object ExampleCombinedEvent {
     tags = Map(hc.toAuditTags("testConducted", "/your-web-app/example-path/").toSeq: _*),
     privateData = Map("Password" -> userPassword) ++ generateData(filingID, otherFilingInfo),
     data = hc.toAuditDetails() ++ generateData(filingID, otherFilingInfo),
-    team = "Example",
     AlertLevel.WARNING
   )
 

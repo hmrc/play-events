@@ -19,8 +19,7 @@ package uk.gov.hmrc.play.events.examples
 import uk.gov.hmrc.play.events.AlertLevel._
 import uk.gov.hmrc.play.events.Alertable
 
-case class ExampleAlertEvent(team: String,
-                             source: String,
+case class ExampleAlertEvent(source: String,
                              name: String,
                              level: AlertLevel,
                              data: Map[String, String]) extends Alertable {
@@ -30,7 +29,6 @@ case class ExampleAlertEvent(team: String,
 object ExampleAlertEvent {
 
   def apply(exception: Exception) = new ExampleAlertEvent(
-    team = "Example",
     source = "TestApp",
     name = "External API Alert",
     level = CRITICAL,

@@ -14,8 +14,11 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.play.events
+package uk.gov.hmrc.play.events.handlers
+
+import uk.gov.hmrc.play.audit.http.HeaderCarrier
+import uk.gov.hmrc.play.events.Recordable
 
 trait EventHandler {
-  def handle(recordable: Recordable)
+  def handle(recordable: Recordable)(implicit headerCarrier: HeaderCarrier)
 }
