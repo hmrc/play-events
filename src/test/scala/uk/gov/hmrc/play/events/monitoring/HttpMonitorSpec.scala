@@ -16,18 +16,19 @@
 
 package uk.gov.hmrc.play.events.monitoring
 
-import org.scalatest.WordSpec
+import org.scalatest.{Matchers, WordSpec}
 import org.scalatest.mock.MockitoSugar
 import org.mockito.Mockito._
 import uk.gov.hmrc.play.audit.http.HeaderCarrier
 import uk.gov.hmrc.play.events.handlers.EventHandler
-import uk.gov.hmrc.play.http.{Upstream4xxResponse, Upstream5xxResponse}
+import uk.gov.hmrc.play.http.{HttpException, Upstream4xxResponse, Upstream5xxResponse}
+import uk.gov.hmrc.play.events.AlertLevel._
 
 import scala.concurrent.{Await, Future}
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import scala.concurrent.duration._
 
-class HttpMonitorSpec extends WordSpec with MockitoSugar {
+class HttpMonitorSpec extends WordSpec with MockitoSugar with Matchers {
 
   implicit val hc = new HeaderCarrier()
 
@@ -81,6 +82,50 @@ class HttpMonitorSpec extends WordSpec with MockitoSugar {
       }
     }
 
+    "generate Alert and Monitor events for http-exceptions HttpException" in new HttpMonitor {
+
+      override def source: String = "This-Test"
+
+      val mockHandler = mock[EventHandler]
+
+      override def eventHandlers = Set(mockHandler)
+
+      val exception4XX = new HttpException("Error Msg", 400)
+      val event4XX = DefaultHttpExceptionEvent(source, exception4XX)
+
+      event4XX.level should be (MAJOR)
+
+      intercept[HttpException] {
+        Await.result(
+
+          monitor {
+            Future(throw exception4XX)
+          },
+
+          200 millis
+        )
+
+        verify(mockHandler).handle(event4XX)
+      }
+
+      val exception5XX = new HttpException("Error Msg", 502)
+      val event5XX = DefaultHttpExceptionEvent(source, exception5XX)
+
+      event5XX.level should be (CRITICAL)
+
+      intercept[HttpException] {
+        Await.result(
+
+          monitor {
+            Future(throw exception5XX)
+          },
+
+          200 millis
+        )
+
+        verify(mockHandler).handle(event5XX)
+      }
+    }
 
     "not generate Alert and Monitor events for successful response" in new HttpMonitor {
 
