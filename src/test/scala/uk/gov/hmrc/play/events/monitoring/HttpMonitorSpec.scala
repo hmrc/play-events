@@ -82,7 +82,7 @@ class HttpMonitorSpec extends WordSpec with MockitoSugar with Matchers {
       }
     }
 
-    "generate Alert and Monitor events for play-exceptions HttpException" in new HttpMonitor {
+    "generate Alert and Monitor events for http-exceptions HttpException" in new HttpMonitor {
 
       override def source: String = "This-Test"
 

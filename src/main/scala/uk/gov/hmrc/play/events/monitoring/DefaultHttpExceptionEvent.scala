@@ -31,7 +31,7 @@ object DefaultHttpExceptionEvent {
 
   def apply(source: String, exception: HttpException) = new DefaultHttpExceptionEvent(
     source = source,
-    name = "HttpExceptionsError",
+    name = "HttpException",
     level = if(exception.responseCode >= 500) CRITICAL else MAJOR,
     data = Map(
       "Error Message" -> exception.message,
