@@ -18,7 +18,7 @@ package uk.gov.hmrc.play.events.monitoring
 
 import uk.gov.hmrc.play.audit.http.HeaderCarrier
 import uk.gov.hmrc.play.events.DefaultEventRecorder
-import uk.gov.hmrc.play.http.{Upstream4xxResponse, Upstream5xxResponse}
+import uk.gov.hmrc.play.http.{HttpException, Upstream4xxResponse, Upstream5xxResponse}
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 
 import scala.concurrent.Future
@@ -32,6 +32,7 @@ trait HttpMonitor extends DefaultEventRecorder {
     future.andThen {
       case Failure(exception: Upstream5xxResponse) => record(DefaultHttp500ErrorEvent(source, exception))
       case Failure(exception: Upstream4xxResponse) => record(DefaultHttp400ErrorEvent(source, exception))
+      case Failure(exception: HttpException)       => record(DefaultHttpExceptionEvent(source, exception))
     }
 
     future
