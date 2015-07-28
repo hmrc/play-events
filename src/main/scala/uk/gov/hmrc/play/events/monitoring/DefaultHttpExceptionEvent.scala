@@ -21,9 +21,9 @@ import uk.gov.hmrc.play.events.{Measurable, Alertable}
 import uk.gov.hmrc.play.http.HttpException
 
 case class DefaultHttpExceptionEvent(source: String,
-                                           name: String,
-                                           level: AlertLevel,
-                                           data: Map[String, String]) extends Alertable with Measurable {
+                                     name: String,
+                                     level: AlertLevel,
+                                     data: Map[String, String]) extends Alertable with Measurable {
 
 }
 
