@@ -5,7 +5,7 @@ play-events
 
 Play Events composes various logging and metric standards into traits which can be mixed in to create events for your play app.
 
-Auditing, Metric, Alerts or Logging data can be recorded. A default monitoring implementation for HTTP errors is also provided.
+Auditing, Metrics, Alerts or Logging data can be recorded. A default monitoring implementation for HTTP errors is also provided.
 
 ##Download play-events
 
@@ -122,7 +122,7 @@ record(ExampleAuditEvent(5, "Example"))
 
 ##Creating a Metric Event
 
-A Metric Event currently writes out to the log in a standard format, which can analysed in your Log Digestion app 
+A Metric Event currently writes out to the log in a standard format, which can be analysed in your Log Digestion app 
 to create reports etc.
 
 ```scala
