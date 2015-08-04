@@ -55,7 +55,8 @@ record(ExampleAlertEvent(someException))
 
 Alert Events are written out to the logs in the following standard format. Match on this format with your Paging or Alerts service.
 ```scala
-Logger.warn(s"alert:${alertable.level}:source:${alertable.source}:name:${alertable.name}")
+Logger.warn(s"alert:${alertable.level}:source:${alertable.source}" + 
+                ":name:${alertable.name}")
 ```
 
 ##Creating an Audit Event
@@ -78,7 +79,7 @@ case class ExampleAuditEvent(source: String,
 
 object ExampleAuditEvent {
 
-  def apply(testCount: Int, testName: String)(implicit hc: HeaderCarrier): ExampleAuditEvent =
+  def apply(testCount: Int, testName: String)(implicit hc: HeaderCarrier) =
     ExampleAuditEvent(
       source = "example-source",
       name = "test-conducted",
@@ -114,9 +115,8 @@ Note that we include ```super.eventHandlers``` so that the Default Alert, Metric
 
 ```scala
 trait ExampleEventRecorder extends DefaultEventRecorder {
-
-  override def eventHandlers: Set[EventHandler] = super.eventHandlers ++ Set(DefaultAuditEventHandler)
-
+  override def eventHandlers: Set[EventHandler] = 
+    super.eventHandlers ++ Set(DefaultAuditEventHandler)
 }
 ```
 
@@ -140,7 +140,6 @@ case class ExampleMetricEvent(source: String,
                               data: Map[String, String]) extends Measurable
 
 object ExampleMetricEvent {
-
   def apply(fileId: String, fileType: String) =
     new ExampleMetricEvent(
       source = "TestApp",
@@ -149,7 +148,6 @@ object ExampleMetricEvent {
       "File ID" -> fileId,
       "File Type" -> fileType
     ))
-
 }
 ```
 
@@ -158,7 +156,8 @@ object ExampleMetricEvent {
 The ```DefaultEventRecorder``` trait writes out Metric Events in this standard format.
 
 ```scala
-Logger.info(s"metric:source:${measurable.source}:name:${measurable.name}:data:${measurable.data}")
+Logger.info(s"metric:source:${measurable.source}:name:${measurable.name}" + 
+                ":data:${measurable.data}")
 ```
 
 They can be recorded by:
@@ -187,7 +186,8 @@ case class ExampleCombinedEvent(source: String,
                                 tags: Map[String, String],
                                 privateData: Map[String, String],
                                 data: Map[String, String],
-                                level: AlertLevel) extends Auditable with Measurable with Loggable with Alertable {
+                                level: AlertLevel) 
+                             extends Auditable with Measurable with Loggable with Alertable {
 
  override def log = "Combined Event occurred"
 
@@ -195,18 +195,20 @@ case class ExampleCombinedEvent(source: String,
 
 object ExampleCombinedEvent {
 
-  def apply(filingID: String, otherFilingInfo: String, userPassword: String)(implicit hc: HeaderCarrier) = new ExampleCombinedEvent(
+  def apply(filingID: String, otherFilingInfo: String, userPassword: String)
+           (implicit hc: HeaderCarrier) = 
+  new ExampleCombinedEvent(
     source = "test-app",
     name = "CombinedEvent",
     tags = Map(hc.toAuditTags("testConducted", "/your-web-app/example-path/").toSeq: _*),
-    privateData = Map("Password" -> userPassword) ++ generateData(filingID, otherFilingInfo),
+    privateData = Map("Password" -> userPassword) ++ 
+                  generateData(filingID, otherFilingInfo),
     data = hc.toAuditDetails() ++ generateData(filingID, otherFilingInfo),
     AlertLevel.WARNING
   )
 
-  def generateData(filingID: String, otherFilingInfo: String): Map[String, String] = {
+  def generateData(filingID: String, otherFilingInfo: String): Map[String, String] =
     Map("Filing ID" -> filingID, "Filing Info" -> otherFilingInfo)
-  }
 }
 ```
 
@@ -226,4 +228,4 @@ def getHttpData()(implicit hc: HeaderCarrier) : Future[ExampleHttpResponse] = {
 ```
 
 This will catch any of ```uk.gov.hmrc.play.http.{HttpException, Upstream4xxResponse, Upstream5xxResponse}``` and log 
-both a Metric event and a Critical Alert event for any that occur, and pass the exception along.
+both a Metric and Critical Alert event for any that occur, and pass the exception along.
