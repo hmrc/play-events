@@ -25,23 +25,14 @@ import uk.gov.hmrc.play.events.Alertable
 
 case class ExampleAlertEvent(source: String,
                              name: String,
-                             level: AlertLevel,
-                             data: Map[String, String]) extends Alertable {
-
-}
+                             level: AlertLevel) extends Alertable
 
 object ExampleAlertEvent {
-
-  def apply(exception: Exception) = new ExampleAlertEvent(
+  def apply() = new ExampleAlertEvent(
     source = "TestApp",
     name = "External API Alert",
-    level = CRITICAL,
-    data = Map (
-      "error" -> exception.getMessage,
-      "trace" -> exception.getStackTrace.toString
-    )
+    level = CRITICAL
   )
-
 }
 ```
 
@@ -50,14 +41,17 @@ object ExampleAlertEvent {
 The above event would be recorded in your app by mixing in the `DefaultEventRecorder` trait and calling:
 
 ```scala
-record(ExampleAlertEvent(someException))
+record(ExampleAlertEvent())
 ```
 
 Alert Events are written out to the logs in the following standard format. Match on this format with your Paging or Alerts service.
 ```scala
 Logger.warn(s"alert:${alertable.level}:source:${alertable.source}" + 
-                ":name:${alertable.name}")
+             ":name:${alertable.name}")
 ```
+
+So the output of this alert will be similar to 
+```2015-08-04 13:54:56,793 level=[WARN] logger=[application] message=[alert:CRITICAL:source:TestApp:name:External Api Alert]```
 
 ##Creating an Audit Event
 
@@ -83,7 +77,8 @@ object ExampleAuditEvent {
     ExampleAuditEvent(
       source = "example-source",
       name = "test-conducted",
-      tags = Map(hc.toAuditTags("testConducted", "/your-web-app/example-path/").toSeq: _*),
+      tags = Map(hc.toAuditTags("testConducted", 
+                                "/your-web-app/example-path/").toSeq: _*),
       privateData = hc.toAuditDetails() ++ buildAuditData(testCount, testName)
     )
 
@@ -166,6 +161,9 @@ They can be recorded by:
 record(ExampleMetricEvent("1234567", "SHARED"))
 ```
 
+The output of this metric will be similar to 
+```2015-08-04 13:54:56,793 level=[INFO] logger=[application] message=[metric:source:TestApp:name:NumberOfCreatedFilings:data:Map(File ID -> 1234567, File Type -> SHARED]```
+
 ##Combining Event Types in One Event
 
 The event traits can be mixed in together to allow for an event to be recorded once but produce multiple types of 
@@ -187,7 +185,7 @@ case class ExampleCombinedEvent(source: String,
                                 privateData: Map[String, String],
                                 data: Map[String, String],
                                 level: AlertLevel) 
-                             extends Auditable with Measurable with Loggable with Alertable {
+            extends Auditable with Measurable with Loggable with Alertable {
 
  override def log = "Combined Event occurred"
 
@@ -200,7 +198,8 @@ object ExampleCombinedEvent {
   new ExampleCombinedEvent(
     source = "test-app",
     name = "CombinedEvent",
-    tags = Map(hc.toAuditTags("testConducted", "/your-web-app/example-path/").toSeq: _*),
+    tags = Map(hc.toAuditTags("testConducted", 
+                              "/your-web-app/example-path/").toSeq: _*),
     privateData = Map("Password" -> userPassword) ++ 
                   generateData(filingID, otherFilingInfo),
     data = hc.toAuditDetails() ++ generateData(filingID, otherFilingInfo),
