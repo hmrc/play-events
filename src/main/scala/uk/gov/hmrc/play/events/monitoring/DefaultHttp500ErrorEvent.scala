@@ -17,27 +17,30 @@
 package uk.gov.hmrc.play.events.monitoring
 
 import uk.gov.hmrc.play.events.AlertLevel._
+import uk.gov.hmrc.play.events.monitoring.HttpMonitor.AlertCode
 import uk.gov.hmrc.play.events.{Measurable, Alertable}
 import uk.gov.hmrc.play.http.Upstream5xxResponse
 
 case class DefaultHttp500ErrorEvent(source: String,
                                     name: String,
                                     level: AlertLevel,
-                                    data: Map[String, String]) extends Alertable with Measurable {
-
-}
+                                    alertCode: Option[AlertCode],
+                                    data: Map[String, String]) extends Alertable with Measurable
 
 object DefaultHttp500ErrorEvent {
 
-  def apply(source: String, response: Upstream5xxResponse) = new DefaultHttp500ErrorEvent(
-    source = source,
-    name = "Http500Error",
-    level = CRITICAL,
-    data = Map (
-      "Error Message" -> response.message,
-      "Code" -> response.upstreamResponseCode.toString,
-      "Report As" -> response.reportAs.toString
+  def apply(source: String, response: Upstream5xxResponse, alertCode: Option[AlertCode]) = {
+    new DefaultHttp500ErrorEvent(
+      source = source,
+      name = "Http500Error",
+      level = CRITICAL,
+      alertCode = alertCode,
+      data = Map(
+        "Error Message" -> response.message,
+        "Code" -> response.upstreamResponseCode.toString,
+        "Report As" -> response.reportAs.toString
+      )
     )
-  )
+  }
 
 }

@@ -17,22 +17,25 @@
 package uk.gov.hmrc.play.events.monitoring
 
 import uk.gov.hmrc.play.events.AlertLevel._
+import uk.gov.hmrc.play.events.monitoring.HttpMonitor._
 import uk.gov.hmrc.play.events.{Measurable, Alertable}
 import uk.gov.hmrc.play.http.HttpException
 
 case class DefaultHttpExceptionEvent(source: String,
                                      name: String,
                                      level: AlertLevel,
+                                     alertCode: Option[AlertCode],
                                      data: Map[String, String]) extends Alertable with Measurable {
 
 }
 
 object DefaultHttpExceptionEvent {
 
-  def apply(source: String, exception: HttpException) = new DefaultHttpExceptionEvent(
+  def apply(source: String, exception: HttpException, alertCode: Option[AlertCode]) = new DefaultHttpExceptionEvent(
     source = source,
     name = "HttpException",
     level = if(exception.responseCode >= 500) CRITICAL else MAJOR,
+    alertCode = alertCode,
     data = Map(
       "Error Message" -> exception.message,
       "Code" -> exception.responseCode.toString

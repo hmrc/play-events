@@ -18,6 +18,7 @@ package uk.gov.hmrc.play.events.monitoring
 
 import uk.gov.hmrc.play.audit.http.HeaderCarrier
 import uk.gov.hmrc.play.events.DefaultEventRecorder
+import uk.gov.hmrc.play.events.monitoring.HttpMonitor.AlertCode
 import uk.gov.hmrc.play.http.{HttpException, Upstream4xxResponse, Upstream5xxResponse}
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 
@@ -28,13 +29,18 @@ trait HttpMonitor extends DefaultEventRecorder {
 
   def source: String
 
-  def monitor[T](future: Future[T])(implicit hc: HeaderCarrier): Future[T] = {
+  def monitor[T](alertCode: Option[AlertCode] = None)(future: Future[T])(implicit hc: HeaderCarrier): Future[T] = {
     future.andThen {
-      case Failure(exception: Upstream5xxResponse) => record(DefaultHttp500ErrorEvent(source, exception))
-      case Failure(exception: Upstream4xxResponse) => record(DefaultHttp400ErrorEvent(source, exception))
-      case Failure(exception: HttpException)       => record(DefaultHttpExceptionEvent(source, exception))
+      case Failure(exception: Upstream5xxResponse) => record(DefaultHttp500ErrorEvent(source, exception, alertCode))
+      case Failure(exception: Upstream4xxResponse) => record(DefaultHttp400ErrorEvent(source, exception, alertCode))
+      case Failure(exception: HttpException)       => record(DefaultHttpExceptionEvent(source, exception, alertCode))
     }
 
     future
   }
+}
+
+object HttpMonitor {
+
+  type AlertCode = String
 }
