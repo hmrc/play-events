@@ -27,14 +27,14 @@ import uk.gov.hmrc.play.events.monitoring.HttpMonitor.AlertCode
 case class ExampleAlertEvent(source: String,
                              name: String,
                              level: AlertLevel,
-                             alertCode: Option[AlertCode]) extends Alertable
+                             alertCode: AlertCode) extends Alertable
 
 object ExampleAlertEvent {
   def apply() = new ExampleAlertEvent(
     source = "TestApp",
     name = "External API Alert",
     level = CRITICAL,
-    alertCode = Some("EG-A")
+    alertCode = "EG-A"
   )
 }
 ```
@@ -189,7 +189,7 @@ case class ExampleCombinedEvent(source: String,
                                 privateData: Map[String, String],
                                 data: Map[String, String],
                                 level: AlertLevel,
-                                alertCode: Option[AlertCode])
+                                alertCode: AlertCode)
             extends Auditable with Measurable with Loggable with Alertable {
 
  override def log = "Combined Event occurred"
@@ -198,7 +198,7 @@ case class ExampleCombinedEvent(source: String,
 
 object ExampleCombinedEvent {
 
-  def apply(filingID: String, otherFilingInfo: String, userPassword: String, alertCode: Option[AlertCode])
+  def apply(filingID: String, otherFilingInfo: String, userPassword: String, alertCode: AlertCode)
            (implicit hc: HeaderCarrier) = 
   new ExampleCombinedEvent(
     source = "test-app",
