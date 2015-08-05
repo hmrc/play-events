@@ -231,6 +231,7 @@ def getHttpData()(implicit hc: HeaderCarrier) : Future[ExampleHttpResponse] = {
     }
 }
 ```
+The default value for ```AlertCode``` is "Unknown".
 
 Or you can provide an alert code:
 
