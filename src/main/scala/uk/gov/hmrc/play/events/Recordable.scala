@@ -16,7 +16,6 @@
 
 package uk.gov.hmrc.play.events
 
-import uk.gov.hmrc.play.audit.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.model.{AuditEvent, DataEvent}
 import uk.gov.hmrc.play.events.monitoring.HttpMonitor.AlertCode
 
@@ -56,13 +55,13 @@ object AlertLevel extends Enumeration {
 
 }
 
-import AlertLevel._
+import uk.gov.hmrc.play.events.AlertLevel._
 
 trait Alertable extends Recordable {
 
   def source: String
   def name: String
   def level: AlertLevel
-  def alertCode: Option[AlertCode]
+  def alertCode: AlertCode
 
 }

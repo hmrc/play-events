@@ -24,11 +24,11 @@ import uk.gov.hmrc.play.http.Upstream4xxResponse
 case class DefaultHttp400ErrorEvent(source: String,
                                     name: String,
                                     level: AlertLevel,
-                                    alertCode: Option[AlertCode],
+                                    alertCode: AlertCode,
                                     data: Map[String, String]) extends Alertable with Measurable
 
 object DefaultHttp400ErrorEvent {
-  def apply(source: String, response: Upstream4xxResponse, alertCode: Option[AlertCode]) = new DefaultHttp400ErrorEvent(
+  def apply(source: String, response: Upstream4xxResponse, alertCode: AlertCode) = new DefaultHttp400ErrorEvent(
     source = source,
     name = "Http400Error",
     level = MAJOR,
