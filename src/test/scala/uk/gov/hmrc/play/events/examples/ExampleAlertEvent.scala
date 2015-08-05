@@ -18,20 +18,23 @@ package uk.gov.hmrc.play.events.examples
 
 import uk.gov.hmrc.play.events.AlertLevel._
 import uk.gov.hmrc.play.events.Alertable
+import uk.gov.hmrc.play.events.monitoring.HttpMonitor._
 
 case class ExampleAlertEvent(source: String,
                              name: String,
                              level: AlertLevel,
+                             alertCode: Option[AlertCode],
                              data: Map[String, String]) extends Alertable {
 
 }
 
 object ExampleAlertEvent {
 
-  def apply(exception: Exception) = new ExampleAlertEvent(
+  def apply(exception: Exception, alertCode: Option[AlertCode]) = new ExampleAlertEvent(
     source = "TestApp",
     name = "External API Alert",
     level = CRITICAL,
+    alertCode = alertCode,
     data = Map (
       "error" -> exception.getMessage,
       "trace" -> exception.getStackTrace.toString
