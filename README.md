@@ -22,16 +22,19 @@ package uk.gov.hmrc.play.events.examples
 
 import uk.gov.hmrc.play.events.AlertLevel._
 import uk.gov.hmrc.play.events.Alertable
+import uk.gov.hmrc.play.events.monitoring.HttpMonitor.AlertCode
 
 case class ExampleAlertEvent(source: String,
                              name: String,
-                             level: AlertLevel) extends Alertable
+                             level: AlertLevel,
+                             alertCode: Option[AlertCode]) extends Alertable
 
 object ExampleAlertEvent {
   def apply() = new ExampleAlertEvent(
     source = "TestApp",
     name = "External API Alert",
-    level = CRITICAL
+    level = CRITICAL,
+    alertCode = Some("EG-A")
   )
 }
 ```
@@ -47,11 +50,11 @@ record(ExampleAlertEvent())
 Alert Events are written out to the logs in the following standard format. Match on this format with your Paging or Alerts service.
 ```scala
 Logger.warn(s"alert:${alertable.level}:source:${alertable.source}" + 
-             ":name:${alertable.name}")
+             ":code:${alertable.alertCode}:name:${alertable.name}")
 ```
 
 So the output of this alert will be similar to 
-```2015-08-04 13:54:56,793 level=[WARN] logger=[application] message=[alert:CRITICAL:source:TestApp:name:External Api Alert]```
+```2015-08-04 13:54:56,793 level=[WARN] logger=[application] message=[alert:CRITICAL:source:TestApp:code:EG-A:name:External Api Alert]```
 
 ##Creating an Audit Event
 
@@ -178,13 +181,15 @@ package uk.gov.hmrc.play.events.examples
 import uk.gov.hmrc.play.audit.http.HeaderCarrier
 import uk.gov.hmrc.play.events.AlertLevel.AlertLevel
 import uk.gov.hmrc.play.events._
+import uk.gov.hmrc.play.events.monitoring.HttpMonitor.AlertCode
 
 case class ExampleCombinedEvent(source: String,
                                 name: String,
                                 tags: Map[String, String],
                                 privateData: Map[String, String],
                                 data: Map[String, String],
-                                level: AlertLevel) 
+                                level: AlertLevel,
+                                alertCode: Option[AlertCode])
             extends Auditable with Measurable with Loggable with Alertable {
 
  override def log = "Combined Event occurred"
@@ -193,7 +198,7 @@ case class ExampleCombinedEvent(source: String,
 
 object ExampleCombinedEvent {
 
-  def apply(filingID: String, otherFilingInfo: String, userPassword: String)
+  def apply(filingID: String, otherFilingInfo: String, userPassword: String, alertCode: Option[AlertCode])
            (implicit hc: HeaderCarrier) = 
   new ExampleCombinedEvent(
     source = "test-app",
@@ -203,6 +208,7 @@ object ExampleCombinedEvent {
     privateData = Map("Password" -> userPassword) ++ 
                   generateData(filingID, otherFilingInfo),
     data = hc.toAuditDetails() ++ generateData(filingID, otherFilingInfo),
+    alertCode = alertCode,
     AlertLevel.WARNING
   )
 
@@ -220,7 +226,17 @@ library. In any class that extends ```HttpMonitor``` you can wrap your code with
 
 ```scala
 def getHttpData()(implicit hc: HeaderCarrier) : Future[ExampleHttpResponse] = {
-    monitor {
+    monitor() {
+      http.GET[ExampleHttpResponse](exampleGetUrl)
+    }
+}
+```
+
+Or you can provide an error code:
+
+```scala
+def getHttpData()(implicit hc: HeaderCarrier) : Future[ExampleHttpResponse] = {
+    monitor(Some("ALERT-CODE")) {
       http.GET[ExampleHttpResponse](exampleGetUrl)
     }
 }
