@@ -29,7 +29,7 @@ class AlertEventHandlerSpec extends WordSpec with Matchers {
 
     "handle Alert events" in new AlertEventHandler {
 
-      val alertEvent = ExampleAlertEvent(new IllegalStateException("There ain't no state!"), None)
+      val alertEvent = ExampleAlertEvent(new IllegalStateException("There ain't no state!"), "Unknown")
 
       handle(alertEvent)
 

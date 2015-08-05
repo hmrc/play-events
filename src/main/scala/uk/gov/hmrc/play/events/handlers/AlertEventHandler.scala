@@ -21,7 +21,7 @@ import uk.gov.hmrc.play.audit.http.HeaderCarrier
 import uk.gov.hmrc.play.events.{Alertable, Recordable}
 
 object DefaultAlertEventHandler extends AlertEventHandler {
-  override def handleAlertable(alertable: Alertable) = Logger.warn(s"alert:${alertable.level}:source:${alertable.source}:code:${alertable.alertCode.getOrElse("Unknown")}:name:${alertable.name}")
+  override def handleAlertable(alertable: Alertable) = Logger.warn(s"alert:${alertable.level}:source:${alertable.source}:code:${alertable.alertCode}:name:${alertable.name}")
 }
 
 trait AlertEventHandler extends EventHandler {

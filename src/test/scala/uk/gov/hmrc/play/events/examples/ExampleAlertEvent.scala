@@ -23,14 +23,14 @@ import uk.gov.hmrc.play.events.monitoring.HttpMonitor._
 case class ExampleAlertEvent(source: String,
                              name: String,
                              level: AlertLevel,
-                             alertCode: Option[AlertCode],
+                             alertCode: AlertCode,
                              data: Map[String, String]) extends Alertable {
 
 }
 
 object ExampleAlertEvent {
 
-  def apply(exception: Exception, alertCode: Option[AlertCode]) = new ExampleAlertEvent(
+  def apply(exception: Exception, alertCode: AlertCode) = new ExampleAlertEvent(
     source = "TestApp",
     name = "External API Alert",
     level = CRITICAL,

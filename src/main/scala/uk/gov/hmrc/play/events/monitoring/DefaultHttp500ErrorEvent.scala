@@ -24,12 +24,12 @@ import uk.gov.hmrc.play.http.Upstream5xxResponse
 case class DefaultHttp500ErrorEvent(source: String,
                                     name: String,
                                     level: AlertLevel,
-                                    alertCode: Option[AlertCode],
+                                    alertCode: AlertCode,
                                     data: Map[String, String]) extends Alertable with Measurable
 
 object DefaultHttp500ErrorEvent {
 
-  def apply(source: String, response: Upstream5xxResponse, alertCode: Option[AlertCode]) = {
+  def apply(source: String, response: Upstream5xxResponse, alertCode: AlertCode) = {
     new DefaultHttp500ErrorEvent(
       source = source,
       name = "Http500Error",

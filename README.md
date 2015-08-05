@@ -232,7 +232,7 @@ def getHttpData()(implicit hc: HeaderCarrier) : Future[ExampleHttpResponse] = {
 }
 ```
 
-Or you can provide an error code:
+Or you can provide an alert code:
 
 ```scala
 def getHttpData()(implicit hc: HeaderCarrier) : Future[ExampleHttpResponse] = {

@@ -62,6 +62,6 @@ trait Alertable extends Recordable {
   def source: String
   def name: String
   def level: AlertLevel
-  def alertCode: Option[AlertCode]
+  def alertCode: AlertCode
 
 }
