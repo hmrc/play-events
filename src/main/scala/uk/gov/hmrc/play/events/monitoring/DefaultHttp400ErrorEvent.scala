@@ -17,22 +17,22 @@
 package uk.gov.hmrc.play.events.monitoring
 
 import uk.gov.hmrc.play.events.AlertLevel._
+import uk.gov.hmrc.play.events.monitoring.HttpMonitor._
 import uk.gov.hmrc.play.events.{Measurable, Alertable}
 import uk.gov.hmrc.play.http.Upstream4xxResponse
 
 case class DefaultHttp400ErrorEvent(source: String,
                                     name: String,
                                     level: AlertLevel,
-                                    data: Map[String, String]) extends Alertable with Measurable {
-
-}
+                                    alertCode: Option[AlertCode],
+                                    data: Map[String, String]) extends Alertable with Measurable
 
 object DefaultHttp400ErrorEvent {
-
-  def apply(source: String, response: Upstream4xxResponse) = new DefaultHttp400ErrorEvent(
+  def apply(source: String, response: Upstream4xxResponse, alertCode: Option[AlertCode]) = new DefaultHttp400ErrorEvent(
     source = source,
     name = "Http400Error",
     level = MAJOR,
+    alertCode = alertCode,
     data = Map (
       "Error Message" -> response.message,
       "Code" -> response.upstreamResponseCode.toString,

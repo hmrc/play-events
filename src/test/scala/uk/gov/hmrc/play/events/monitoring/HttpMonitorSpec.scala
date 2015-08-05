@@ -34,7 +34,7 @@ class HttpMonitorSpec extends WordSpec with MockitoSugar with Matchers {
 
   "HttpMonitor" should {
 
-    "generate Alert and Monitor events for 500 error" in new HttpMonitor {
+    "generate Alert and Monitor events for 500 error with no alert code" in new HttpMonitor {
       override def source: String = "This-Test"
 
       val mockHandler = mock[EventHandler]
@@ -46,19 +46,42 @@ class HttpMonitorSpec extends WordSpec with MockitoSugar with Matchers {
       intercept[Upstream5xxResponse] {
         Await.result(
 
-          monitor {
+          monitor() {
             Future(throw response)
           },
 
           200 millis
         )
 
-        verify(mockHandler).handle(DefaultHttp500ErrorEvent(source, response))
+        verify(mockHandler).handle(DefaultHttp500ErrorEvent(source, response, None))
+      }
+
+    }
+    "generate Alert and Monitor events for 500 error with alert code" in new HttpMonitor {
+      override def source: String = "This-Test"
+
+      val mockHandler = mock[EventHandler]
+
+      override def eventHandlers = Set(mockHandler)
+
+      val response = new Upstream5xxResponse("Error Msg", 500, 60)
+
+      intercept[Upstream5xxResponse] {
+        Await.result(
+
+          monitor(Some("test-code")) {
+            Future(throw response)
+          },
+
+          200 millis
+        )
+
+        verify(mockHandler).handle(DefaultHttp500ErrorEvent(source, response, Some("test-code")))
       }
 
     }
 
-    "generate Alert and Monitor events for 400 error" in new HttpMonitor {
+    "generate Alert and Monitor events for 400 error with alert code" in new HttpMonitor {
 
       override def source: String = "This-Test"
 
@@ -71,14 +94,38 @@ class HttpMonitorSpec extends WordSpec with MockitoSugar with Matchers {
       intercept[Upstream4xxResponse] {
         Await.result(
 
-          monitor {
+          monitor(Some("test-code")) {
             Future(throw response)
           },
 
           200 millis
         )
 
-        verify(mockHandler).handle(DefaultHttp400ErrorEvent(source, response))
+        verify(mockHandler).handle(DefaultHttp400ErrorEvent(source, response, Some("test-code")))
+      }
+    }
+
+    "generate Alert and Monitor events for 400 error with NO alert code" in new HttpMonitor {
+
+      override def source: String = "This-Test"
+
+      val mockHandler = mock[EventHandler]
+
+      override def eventHandlers = Set(mockHandler)
+
+      val response = new Upstream4xxResponse("Error Msg", 403, 60)
+
+      intercept[Upstream4xxResponse] {
+        Await.result(
+
+          monitor() {
+            Future(throw response)
+          },
+
+          200 millis
+        )
+
+        verify(mockHandler).handle(DefaultHttp400ErrorEvent(source, response, None))
       }
     }
 
@@ -91,14 +138,14 @@ class HttpMonitorSpec extends WordSpec with MockitoSugar with Matchers {
       override def eventHandlers = Set(mockHandler)
 
       val exception4XX = new HttpException("Error Msg", 400)
-      val event4XX = DefaultHttpExceptionEvent(source, exception4XX)
+      val event4XX = DefaultHttpExceptionEvent(source, exception4XX, None)
 
       event4XX.level should be (MAJOR)
 
       intercept[HttpException] {
         Await.result(
 
-          monitor {
+          monitor() {
             Future(throw exception4XX)
           },
 
@@ -109,14 +156,59 @@ class HttpMonitorSpec extends WordSpec with MockitoSugar with Matchers {
       }
 
       val exception5XX = new HttpException("Error Msg", 502)
-      val event5XX = DefaultHttpExceptionEvent(source, exception5XX)
+      val event5XX = DefaultHttpExceptionEvent(source, exception5XX, None)
 
       event5XX.level should be (CRITICAL)
 
       intercept[HttpException] {
         Await.result(
 
-          monitor {
+          monitor() {
+            Future(throw exception5XX)
+          },
+
+          200 millis
+        )
+
+        verify(mockHandler).handle(event5XX)
+      }
+    }
+
+    "generate Alert and Monitor events for http-exceptions HttpException with alert code" in new HttpMonitor {
+
+      override def source: String = "This-Test"
+
+      val mockHandler = mock[EventHandler]
+
+      override def eventHandlers = Set(mockHandler)
+
+      val exception4XX = new HttpException("Error Msg", 400)
+      val event4XX = DefaultHttpExceptionEvent(source, exception4XX, Some("test-code"))
+
+      event4XX.level should be (MAJOR)
+
+      intercept[HttpException] {
+        Await.result(
+
+          monitor(Some("test-code")) {
+            Future(throw exception4XX)
+          },
+
+          200 millis
+        )
+
+        verify(mockHandler).handle(event4XX)
+      }
+
+      val exception5XX = new HttpException("Error Msg", 502)
+      val event5XX = DefaultHttpExceptionEvent(source, exception5XX, Some("test-code-2"))
+
+      event5XX.level should be (CRITICAL)
+
+      intercept[HttpException] {
+        Await.result(
+
+          monitor(Some("test-code-2")) {
             Future(throw exception5XX)
           },
 
@@ -137,7 +229,7 @@ class HttpMonitorSpec extends WordSpec with MockitoSugar with Matchers {
 
       Await.result(
 
-        monitor {
+        monitor() {
           Future("Hello")
         },
 
