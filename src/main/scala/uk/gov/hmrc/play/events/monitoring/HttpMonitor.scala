@@ -31,9 +31,9 @@ trait HttpMonitor extends DefaultEventRecorder {
 
   def monitor[T](alertCode: AlertCode = "Unknown")(future: Future[T])(implicit hc: HeaderCarrier): Future[T] = {
     future.andThen {
-      case Failure(exception: Upstream5xxResponse) => record(DefaultHttp500ErrorEvent(source, exception, alertCode))
-      case Failure(exception: Upstream4xxResponse) => record(DefaultHttp400ErrorEvent(source, exception, alertCode))
-      case Failure(exception: HttpException)       => record(DefaultHttpExceptionEvent(source, exception, alertCode))
+      case Failure(exception: Upstream5xxResponse) => record(DefaultHttpErrorEvent(source, exception, alertCode))
+      case Failure(exception: Upstream4xxResponse) => record(DefaultHttpErrorEvent(source, exception, alertCode))
+      case Failure(exception: HttpException)       => record(DefaultHttpErrorEvent(source, exception, alertCode))
     }
 
     future

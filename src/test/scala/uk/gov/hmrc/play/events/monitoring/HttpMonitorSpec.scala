@@ -53,7 +53,7 @@ class HttpMonitorSpec extends WordSpec with MockitoSugar with Matchers {
           200 millis
         )
 
-        verify(mockHandler).handle(DefaultHttp500ErrorEvent(source, response, "Unknown"))
+        verify(mockHandler).handle(DefaultHttpErrorEvent(source, response, "Unknown"))
       }
 
     }
@@ -76,7 +76,7 @@ class HttpMonitorSpec extends WordSpec with MockitoSugar with Matchers {
           200 millis
         )
 
-        verify(mockHandler).handle(DefaultHttp500ErrorEvent(source, response, "test-code"))
+        verify(mockHandler).handle(DefaultHttpErrorEvent(source, response, "test-code"))
       }
 
     }
@@ -101,7 +101,7 @@ class HttpMonitorSpec extends WordSpec with MockitoSugar with Matchers {
           200 millis
         )
 
-        verify(mockHandler).handle(DefaultHttp400ErrorEvent(source, response, "test-code"))
+        verify(mockHandler).handle(DefaultHttpErrorEvent(source, response, "test-code"))
       }
     }
 
@@ -125,7 +125,7 @@ class HttpMonitorSpec extends WordSpec with MockitoSugar with Matchers {
           200 millis
         )
 
-        verify(mockHandler).handle(DefaultHttp400ErrorEvent(source, response, "Unknown"))
+        verify(mockHandler).handle(DefaultHttpErrorEvent(source, response, "Unknown"))
       }
     }
 
@@ -138,7 +138,7 @@ class HttpMonitorSpec extends WordSpec with MockitoSugar with Matchers {
       override def eventHandlers = Set(mockHandler)
 
       val exception4XX = new HttpException("Error Msg", 400)
-      val event4XX = DefaultHttpExceptionEvent(source, exception4XX, "Unknown")
+      val event4XX = DefaultHttpErrorEvent(source, exception4XX, "Unknown")
 
       event4XX.level should be (MAJOR)
 
@@ -156,7 +156,7 @@ class HttpMonitorSpec extends WordSpec with MockitoSugar with Matchers {
       }
 
       val exception5XX = new HttpException("Error Msg", 502)
-      val event5XX = DefaultHttpExceptionEvent(source, exception5XX, "Unknown")
+      val event5XX = DefaultHttpErrorEvent(source, exception5XX, "Unknown")
 
       event5XX.level should be (CRITICAL)
 
@@ -183,7 +183,7 @@ class HttpMonitorSpec extends WordSpec with MockitoSugar with Matchers {
       override def eventHandlers = Set(mockHandler)
 
       val exception4XX = new HttpException("Error Msg", 400)
-      val event4XX = DefaultHttpExceptionEvent(source, exception4XX, "test-code")
+      val event4XX = DefaultHttpErrorEvent(source, exception4XX, "test-code")
 
       event4XX.level should be (MAJOR)
 
@@ -201,7 +201,7 @@ class HttpMonitorSpec extends WordSpec with MockitoSugar with Matchers {
       }
 
       val exception5XX = new HttpException("Error Msg", 502)
-      val event5XX = DefaultHttpExceptionEvent(source, exception5XX, "test-code-2")
+      val event5XX = DefaultHttpErrorEvent(source, exception5XX, "test-code-2")
 
       event5XX.level should be (CRITICAL)
 
