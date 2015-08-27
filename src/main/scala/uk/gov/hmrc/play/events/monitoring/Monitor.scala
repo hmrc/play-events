@@ -20,13 +20,13 @@ import uk.gov.hmrc.play.audit.http.HeaderCarrier
 import uk.gov.hmrc.play.events.DefaultEventRecorder
 import uk.gov.hmrc.play.events.monitoring.Monitor.AlertCode
 import uk.gov.hmrc.play.http.{HttpException, Upstream4xxResponse, Upstream5xxResponse}
-import play.api.libs.concurrent.Execution.Implicits.defaultContext
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 import scala.util.Failure
 
 trait Monitor {
-  def monitor[T](alertCode: AlertCode = "Unknown")(future: Future[T])(implicit hc: HeaderCarrier): Future[T] = future
+
+  def monitor[T](alertCode: AlertCode = "Unknown")(future: Future[T])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[T] = future
 }
 
 object Monitor {
@@ -38,7 +38,7 @@ trait HttpMonitor extends Monitor with DefaultEventRecorder {
 
   def source: String
 
-  override def monitor[T](alertCode: AlertCode = "Unknown")(future: Future[T])(implicit hc: HeaderCarrier): Future[T] = {
+  override def monitor[T](alertCode: AlertCode = "Unknown")(future: Future[T])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[T] = {
     super.monitor(alertCode) {
       future.andThen {
         case Failure(exception: Upstream5xxResponse) => record(DefaultHttpErrorEvent(source, exception, alertCode))
