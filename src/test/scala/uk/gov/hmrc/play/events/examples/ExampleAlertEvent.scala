@@ -18,7 +18,7 @@ package uk.gov.hmrc.play.events.examples
 
 import uk.gov.hmrc.play.events.AlertLevel._
 import uk.gov.hmrc.play.events.Alertable
-import uk.gov.hmrc.play.events.monitoring.HttpMonitor._
+import uk.gov.hmrc.play.events.monitoring.Monitor._
 
 case class ExampleAlertEvent(source: String,
                              name: String,

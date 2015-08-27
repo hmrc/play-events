@@ -18,29 +18,33 @@ package uk.gov.hmrc.play.events.monitoring
 
 import uk.gov.hmrc.play.audit.http.HeaderCarrier
 import uk.gov.hmrc.play.events.DefaultEventRecorder
-import uk.gov.hmrc.play.events.monitoring.HttpMonitor.AlertCode
+import uk.gov.hmrc.play.events.monitoring.Monitor.AlertCode
 import uk.gov.hmrc.play.http.{HttpException, Upstream4xxResponse, Upstream5xxResponse}
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 
 import scala.concurrent.Future
 import scala.util.Failure
 
-trait HttpMonitor extends DefaultEventRecorder {
+trait Monitor {
+  def monitor[T](alertCode: AlertCode = "Unknown")(future: Future[T])(implicit hc: HeaderCarrier): Future[T] = future
+}
+
+object Monitor {
+
+  type AlertCode = String
+}
+
+trait HttpMonitor extends Monitor with DefaultEventRecorder {
 
   def source: String
 
-  def monitor[T](alertCode: AlertCode = "Unknown")(future: Future[T])(implicit hc: HeaderCarrier): Future[T] = {
-    future.andThen {
-      case Failure(exception: Upstream5xxResponse) => record(DefaultHttpErrorEvent(source, exception, alertCode))
-      case Failure(exception: Upstream4xxResponse) => record(DefaultHttpErrorEvent(source, exception, alertCode))
-      case Failure(exception: HttpException)       => record(DefaultHttpErrorEvent(source, exception, alertCode))
+  override def monitor[T](alertCode: AlertCode = "Unknown")(future: Future[T])(implicit hc: HeaderCarrier): Future[T] = {
+    super.monitor(alertCode) {
+      future.andThen {
+        case Failure(exception: Upstream5xxResponse) => record(DefaultHttpErrorEvent(source, exception, alertCode))
+        case Failure(exception: Upstream4xxResponse) => record(DefaultHttpErrorEvent(source, exception, alertCode))
+        case Failure(exception: HttpException) => record(DefaultHttpErrorEvent(source, exception, alertCode))
+      }
     }
-
-    future
   }
-}
-
-object HttpMonitor {
-
-  type AlertCode = String
 }

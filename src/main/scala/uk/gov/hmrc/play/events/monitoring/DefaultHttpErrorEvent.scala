@@ -18,7 +18,7 @@ package uk.gov.hmrc.play.events.monitoring
 
 import uk.gov.hmrc.play.events.AlertLevel._
 import uk.gov.hmrc.play.events.{Measurable, Alertable}
-import uk.gov.hmrc.play.events.monitoring.HttpMonitor._
+import uk.gov.hmrc.play.events.monitoring.Monitor._
 import uk.gov.hmrc.play.http.{Upstream4xxResponse, Upstream5xxResponse, HttpException}
 
 case class DefaultHttpErrorEvent(source: String,
