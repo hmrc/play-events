@@ -23,7 +23,6 @@ import uk.gov.hmrc.play.audit.http.HeaderCarrier
 import uk.gov.hmrc.play.events.examples.ExampleAuditEvent
 import uk.gov.hmrc.play.events.handlers.EventHandler
 
-
 class EventRecorderSpec extends WordSpec with MockitoSugar {
 
   "EventRecorder" should {

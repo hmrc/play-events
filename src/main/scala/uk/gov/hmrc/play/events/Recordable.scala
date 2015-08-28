@@ -17,7 +17,6 @@
 package uk.gov.hmrc.play.events
 
 import uk.gov.hmrc.play.audit.model.{AuditEvent, DataEvent}
-import uk.gov.hmrc.play.events.monitoring.Monitor.AlertCode
 
 trait Recordable
 

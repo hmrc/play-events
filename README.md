@@ -10,7 +10,7 @@ Auditing, Metrics, Alerts or Logging data can be recorded. A default monitoring 
 ##Download play-events
 
 ```scala
-libraryDependencies += "uk.gov.hmrc" %% "play-events" % "0.4.0"
+libraryDependencies += "uk.gov.hmrc" %% "play-events" % "0.7.0"
 ```
 
 ##Creating an Alert Event
@@ -22,7 +22,7 @@ package uk.gov.hmrc.play.events.examples
 
 import uk.gov.hmrc.play.events.AlertLevel._
 import uk.gov.hmrc.play.events.Alertable
-import uk.gov.hmrc.play.events.monitoring.HttpMonitor.AlertCode
+import uk.gov.hmrc.play.events.AlertCode
 
 case class ExampleAlertEvent(source: String,
                              name: String,
@@ -181,7 +181,7 @@ package uk.gov.hmrc.play.events.examples
 import uk.gov.hmrc.play.audit.http.HeaderCarrier
 import uk.gov.hmrc.play.events.AlertLevel.AlertLevel
 import uk.gov.hmrc.play.events._
-import uk.gov.hmrc.play.events.monitoring.HttpMonitor.AlertCode
+import uk.gov.hmrc.play.events.AlertCode
 
 case class ExampleCombinedEvent(source: String,
                                 name: String,
@@ -219,16 +219,16 @@ object ExampleCombinedEvent {
 
 This event can be recorded using the ```ExampleEventRecorder``` above.
 
-##Default Monitoring of Http Errors
+##Default Monitoring of Http Errors and Error Counts
 
-The trait ```HttpMonitor``` provides a default monitoring solution for any app that uses the **uk.gov.hmrc.http-verbs**
-library. In any class that extends ```HttpMonitor``` you can wrap your code with ```monitor``` as follows:
+The traits ```HttpErrorMonitor``` and ```HttpErrorCountMonitor``` provide a default monitoring solution for any app that uses the **uk.gov.hmrc.http-verbs**
+library. In any class that extends ```HttpErrorMonitor``` or ```HttpErrorCountMonitor``` you can wrap your code with ```monitor``` as follows:
 
 ```scala
 def getHttpData()(implicit hc: HeaderCarrier) : Future[ExampleHttpResponse] = {
-    monitor() {
-      http.GET[ExampleHttpResponse](exampleGetUrl)
-    }
+  monitor() {
+    http.GET[ExampleHttpResponse](exampleGetUrl)
+  }
 }
 ```
 The default value for ```AlertCode``` is "Unknown".
@@ -237,11 +237,73 @@ Or you can provide an alert code:
 
 ```scala
 def getHttpData()(implicit hc: HeaderCarrier) : Future[ExampleHttpResponse] = {
-    monitor(Some("ALERT-CODE")) {
-      http.GET[ExampleHttpResponse](exampleGetUrl)
-    }
+  monitor("ALERT-CODE") {
+    http.GET[ExampleHttpResponse](exampleGetUrl)
+  }
 }
 ```
 
-This will catch any of ```uk.gov.hmrc.play.http.{HttpException, Upstream4xxResponse, Upstream5xxResponse}``` and log 
-both a Metric and Critical Alert event for any that occur, and pass the exception along.
+This will catch any of ```uk.gov.hmrc.play.http.{HttpException, Upstream4xxResponse, Upstream5xxResponse}```, log events if an exception occurs, and pass the exception along.
+
+
+The traits ```HttpErrorMonitor``` and ```HttpErrorCountMonitor``` are stackable - the events logged as a result of wrapping your code in ```monitor``` depend upon whether you've mixed in the traits ```HttpErrorMonitor``` or ```HttpErrorCountMonitor``` or both, as follows:
+* ```HttpErrorMonitor``` logs both a Metric and Critical Alert event for each exception
+* ```HttpErrorCountMonitor``` logs a Metric event for each exception
+
+
+##Default Monitoring of Http Response Times
+
+In any class that extends the ```Timer``` trait you can wrap a Http call with ```timer```.  This can be combined with the Http error monitoring described in the previous section, as follows:
+
+```scala
+def getHttpData()(implicit hc: HeaderCarrier) : Future[ExampleHttpResponse] = {
+  monitor("ALERT-CODE") {
+    timer("ALERT-CODE") {
+      http.GET[ExampleHttpResponse](exampleGetUrl)
+    }
+  }
+}
+```
+
+As for Http error monitoring, you can provide an ```AlertCode```, as in the example above, or you can use the default value, which is "Unknown".
+
+This will log a Metric event containing the time in nanoseconds taken to make the Http call.
+
+
+##Custom Monitoring of Http Errors, Error Counts and Response Times
+
+Examples are included of how to extend the ```HttpErrorMonitor```, ```HttpErrorCountMonitor``` and ```Timer``` traits, which is useful for integrating with other Metrics and Alerts libraries.
+
+Your classes can extend these custom monitoring traits and wrap your code with ```monitor``` or ```timer``` as appropriate.
+
+The following shows how to create a custom ```HttpErrorCountMonitor``` with a custom event and custom ```DefaultEventRecorder```.
+
+```scala
+package uk.gov.hmrc.play.events.examples
+
+import uk.gov.hmrc.play.events.DefaultEventRecorder
+import uk.gov.hmrc.play.events.handlers.{DefaultAlertEventHandler, DefaultMetricsEventHandler, EventHandler}
+import uk.gov.hmrc.play.events.Measurable
+import uk.gov.hmrc.play.events.monitoring._
+
+trait ExampleEventRecorder extends DefaultEventRecorder {
+
+  override def eventHandlers: Set[EventHandler] = Set(DefaultMetricsEventHandler, DefaultAlertEventHandler)
+}
+
+trait ExampleHttpErrorCountMonitor extends HttpErrorCountMonitor with ExampleEventRecorder {
+
+  override val source = "TestApp"
+
+  override def createHttpErrorCountEvent(alertCode: AlertCode, failureCode: FailureCode): Measurable = ExampleHttpErrorCountEvent(alertCode: String, failureCode: String)
+}
+
+case class ExampleHttpErrorCountEvent(alertCode: AlertCode, failureCode: FailureCode) extends Measurable {
+
+  override val source = "TestApp"
+
+  override def data: Map[String, String] = Map.empty
+
+  override def name: String = s"HttpErrorCount-$alertCode-$failureCode"
+}
+```
