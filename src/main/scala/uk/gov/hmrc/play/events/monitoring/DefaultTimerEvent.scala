@@ -14,30 +14,23 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.play.events.examples
+package uk.gov.hmrc.play.events.monitoring
 
-import uk.gov.hmrc.play.events.{Alertable, AlertCode}
-import uk.gov.hmrc.play.events.AlertLevel._
+import uk.gov.hmrc.play.events.{Measurable, AlertCode}
+import scala.concurrent.duration.Duration
 
-case class ExampleAlertEvent(source: String,
+case class DefaultTimerEvent(source: String,
                              name: String,
-                             level: AlertLevel,
-                             alertCode: AlertCode,
-                             data: Map[String, String]) extends Alertable {
+                             data: Map[String, String]) extends Measurable
 
-}
+object DefaultTimerEvent {
 
-object ExampleAlertEvent {
-
-  def apply(exception: Exception, alertCode: AlertCode) = new ExampleAlertEvent(
-    source = "TestApp",
-    name = "External API Alert",
-    level = CRITICAL,
-    alertCode = alertCode,
+  def apply(source: String, alertCode: AlertCode, duration: Duration) = new DefaultTimerEvent(
+    source = source,
+    name = s"Timer-$alertCode",
     data = Map (
-      "error" -> exception.getMessage,
-      "trace" -> exception.getStackTrace.toString
+      "Duration" -> s"${duration.length}",
+      "Unit" -> s"${duration.unit.name}"
     )
   )
-
 }

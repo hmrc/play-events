@@ -18,8 +18,8 @@ package uk.gov.hmrc.play.events.examples
 
 import uk.gov.hmrc.play.audit.http.HeaderCarrier
 import uk.gov.hmrc.play.events.AlertLevel.AlertLevel
+import uk.gov.hmrc.play.events.AlertCode
 import uk.gov.hmrc.play.events._
-import uk.gov.hmrc.play.events.monitoring.HttpMonitor.AlertCode
 
 case class ExampleCombinedEvent(source: String,
                                 name: String,

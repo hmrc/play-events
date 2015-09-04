@@ -21,7 +21,8 @@ object HmrcBuild extends Build {
         Compile.httpVerbs,
         Test.scalaTest,
         Test.pegdown,
-        Test.mockito
+        Test.mockito,
+        Test.hamcrest
       ),
       Developers()
     )
@@ -37,6 +38,7 @@ private object BuildDependencies {
     val scalaTest = "org.scalatest" %% "scalatest" % "2.2.4" % scope
     val mockito = "org.mockito" % "mockito-all" % "1.9.5" % scope
     val pegdown = "org.pegdown" % "pegdown" % "1.5.0" % scope
+    val hamcrest = "org.hamcrest" % "hamcrest-all" % "1.3" % scope
   }
 
   object Test extends Test("test")
