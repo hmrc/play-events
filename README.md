@@ -10,7 +10,9 @@ Auditing, Metrics, Alerts or Logging data can be recorded. A default monitoring 
 ##Download play-events
 
 ```scala
-libraryDependencies += "uk.gov.hmrc" %% "play-events" % "0.7.0"
+resolvers += Resolver.bintrayRepo("hmrc", "releases")
+
+libraryDependencies += "uk.gov.hmrc" %% "play-events" % "x.x.x"
 ```
 
 ##Creating an Alert Event
@@ -308,3 +310,7 @@ case class ExampleTimerEvent(alertCode: String, duration: Duration) extends Meas
   override def name: String = s"Timer-$alertCode"
 }
 ```
+
+##License
+ 
+This code is open source software licensed under the [Apache 2.0 License]("http://www.apache.org/licenses/LICENSE-2.0.html").
