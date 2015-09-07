@@ -17,7 +17,7 @@
 package uk.gov.hmrc.play.events.monitoring
 
 import uk.gov.hmrc.play.audit.http.HeaderCarrier
-import uk.gov.hmrc.play.events.{Recordable, Measurable, DefaultEventRecorder, AlertCode, FailureCode, Unknown}
+import uk.gov.hmrc.play.events.{Recordable, Measurable, DefaultEventRecorder, AlertCode, Unknown}
 import uk.gov.hmrc.play.http.{HttpException, Upstream4xxResponse, Upstream5xxResponse}
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -33,35 +33,35 @@ trait HttpErrorMonitor extends Monitor {
   override def monitor[T](alertCode: AlertCode = Unknown)(future: Future[T])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[T] = {
     super.monitor(alertCode) {
       future.andThen {
-        case Failure(exception: Upstream4xxResponse) => record(createHttpEvent(source, exception, alertCode))
-        case Failure(exception: Upstream5xxResponse) => record(createHttpEvent(source, exception, alertCode))
-        case Failure(exception: HttpException) => record(createHttpEvent(source, exception, alertCode))
+        case Failure(exception: Upstream4xxResponse) => record(createHttpErrorEvent(source, exception, alertCode))
+        case Failure(exception: Upstream5xxResponse) => record(createHttpErrorEvent(source, exception, alertCode))
+        case Failure(exception: HttpException) => record(createHttpErrorEvent(source, exception, alertCode))
       }
     }
   }
 
-  protected def createHttpEvent(source: String, response: Upstream4xxResponse, alertCode: AlertCode): Recordable = DefaultHttpErrorEvent(source, response, alertCode)
+  protected def createHttpErrorEvent(source: String, response: Upstream4xxResponse, alertCode: AlertCode): Recordable = DefaultHttpErrorEvent(source, response, alertCode)
 
-  protected def createHttpEvent(source: String, response: Upstream5xxResponse, alertCode: AlertCode): Recordable = DefaultHttpErrorEvent(source, response, alertCode)
+  protected def createHttpErrorEvent(source: String, response: Upstream5xxResponse, alertCode: AlertCode): Recordable = DefaultHttpErrorEvent(source, response, alertCode)
 
-  protected def createHttpEvent(source: String, response: HttpException, alertCode: AlertCode): Recordable = DefaultHttpErrorEvent(source, response, alertCode)
+  protected def createHttpErrorEvent(source: String, response: HttpException, alertCode: AlertCode): Recordable = DefaultHttpErrorEvent(source, response, alertCode)
 }
 
 trait HttpErrorCountMonitor extends Monitor {
 
-  val Failure4xx: FailureCode = "4xx"
-  val Failure5xx: FailureCode = "5xx"
-  val FailureHttp: FailureCode = "Http"
-
   override def monitor[T](alertCode: AlertCode = Unknown)(future: Future[T])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[T] = {
     super.monitor(alertCode) {
       future.andThen {
-        case Failure(exception: Upstream4xxResponse) => record(createHttpErrorCountEvent(alertCode, Failure4xx))
-        case Failure(exception: Upstream5xxResponse) => record(createHttpErrorCountEvent(alertCode, Failure5xx))
-        case Failure(exception: HttpException) => record(createHttpErrorCountEvent(alertCode, FailureHttp))
+        case Failure(exception: Upstream4xxResponse) => record(createHttpErrorCountEvent(source, exception, alertCode))
+        case Failure(exception: Upstream5xxResponse) => record(createHttpErrorCountEvent(source, exception, alertCode))
+        case Failure(exception: HttpException) => record(createHttpErrorCountEvent(source, exception, alertCode))
       }
     }
   }
 
-  protected def createHttpErrorCountEvent(alertCode: AlertCode, failureCode: FailureCode): Measurable = DefaultHttpErrorCountEvent(source, alertCode, failureCode)
+  protected def createHttpErrorCountEvent(source: String, response: Upstream4xxResponse, alertCode: AlertCode): Measurable = DefaultHttpErrorCountEvent(source, response, alertCode)
+
+  protected def createHttpErrorCountEvent(source: String, response: Upstream5xxResponse, alertCode: AlertCode): Measurable = DefaultHttpErrorCountEvent(source, response, alertCode)
+
+  protected def createHttpErrorCountEvent(source: String, response: HttpException, alertCode: AlertCode): Measurable = DefaultHttpErrorCountEvent(source, response, alertCode)
 }

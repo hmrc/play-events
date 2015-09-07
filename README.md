@@ -276,34 +276,35 @@ Examples are included of how to extend the ```HttpErrorMonitor```, ```HttpErrorC
 
 Your classes can extend these custom monitoring traits and wrap your code with ```monitor``` or ```timer``` as appropriate.
 
-The following shows how to create a custom ```HttpErrorCountMonitor``` with a custom event and custom ```DefaultEventRecorder```.
+The following shows how to create a custom ```Timer``` with a custom event and custom ```DefaultEventRecorder```.
 
 ```scala
-package uk.gov.hmrc.play.events.examples
-
-import uk.gov.hmrc.play.events.DefaultEventRecorder
+import uk.gov.hmrc.play.events._
 import uk.gov.hmrc.play.events.handlers.{DefaultAlertEventHandler, DefaultMetricsEventHandler, EventHandler}
-import uk.gov.hmrc.play.events.Measurable
 import uk.gov.hmrc.play.events.monitoring._
+
+import scala.concurrent.duration.Duration
 
 trait ExampleEventRecorder extends DefaultEventRecorder {
 
   override def eventHandlers: Set[EventHandler] = Set(DefaultMetricsEventHandler, DefaultAlertEventHandler)
 }
 
-trait ExampleHttpErrorCountMonitor extends HttpErrorCountMonitor with ExampleEventRecorder {
+trait ExampleTimer extends Timer with ExampleEventRecorder {
 
   override val source = "TestApp"
 
-  override def createHttpErrorCountEvent(alertCode: AlertCode, failureCode: FailureCode): Measurable = ExampleHttpErrorCountEvent(alertCode: String, failureCode: String)
+  override def createTimerEvent(alertCode: AlertCode, duration: Duration): Measurable = ExampleTimerEvent(alertCode, duration)
 }
 
-case class ExampleHttpErrorCountEvent(alertCode: AlertCode, failureCode: FailureCode) extends Measurable {
+case class ExampleTimerEvent(alertCode: String, duration: Duration) extends Measurable {
 
   override val source = "TestApp"
 
-  override def data: Map[String, String] = Map.empty
+  override def data: Map[String, String] = Map (
+    "Time" -> s"${duration.length}"
+  )
 
-  override def name: String = s"HttpErrorCount-$alertCode-$failureCode"
+  override def name: String = s"Timer-$alertCode"
 }
 ```

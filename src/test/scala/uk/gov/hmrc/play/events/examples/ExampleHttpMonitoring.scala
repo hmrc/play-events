@@ -16,10 +16,10 @@
 
 package uk.gov.hmrc.play.events.examples
 
-import uk.gov.hmrc.play.events.DefaultEventRecorder
+import uk.gov.hmrc.play.events._
 import uk.gov.hmrc.play.events.handlers.{DefaultAlertEventHandler, DefaultMetricsEventHandler, EventHandler}
-import uk.gov.hmrc.play.events.{Measurable, AlertCode, FailureCode}
 import uk.gov.hmrc.play.events.monitoring._
+import uk.gov.hmrc.play.http.{HttpException, Upstream5xxResponse, Upstream4xxResponse}
 
 import scala.concurrent.duration.Duration
 
@@ -37,16 +37,44 @@ trait ExampleHttpErrorCountMonitor extends HttpErrorCountMonitor with ExampleEve
 
   override val source = "TestApp"
 
-  override def createHttpErrorCountEvent(alertCode: AlertCode, failureCode: FailureCode): Measurable = ExampleHttpErrorCountEvent(alertCode: String, failureCode: String)
+  override def createHttpErrorCountEvent(source: String, response: Upstream4xxResponse, alertCode: AlertCode): Measurable = ExampleHttpErrorCountEvent(source, response, alertCode)
+
+  override def createHttpErrorCountEvent(source: String, response: Upstream5xxResponse, alertCode: AlertCode): Measurable = ExampleHttpErrorCountEvent(source, response, alertCode)
+
+  override def createHttpErrorCountEvent(source: String, response: HttpException, alertCode: AlertCode): Measurable = ExampleHttpErrorCountEvent(source, response, alertCode)
 }
 
-case class ExampleHttpErrorCountEvent(alertCode: AlertCode, failureCode: FailureCode) extends Measurable {
+case class ExampleHttpErrorCountEvent(source: String,
+                                      name: String,
+                                      data: Map[String, String]) extends Measurable
 
-  override val source = "TestApp"
+object ExampleHttpErrorCountEvent {
 
-  override def data: Map[String, String] = Map.empty
+  private val Source = "TestApp"
 
-  override def name: String = s"HttpErrorCount-$alertCode-$failureCode"
+  def apply(source: String, response: Upstream4xxResponse, alertCode: AlertCode) = new DefaultHttpErrorCountEvent(
+    source = Source,
+    name = s"Http4xxErrorCount-$alertCode",
+    data = Map (
+      "Count" -> "1"
+    )
+  )
+
+  def apply(source: String, response: Upstream5xxResponse, alertCode: AlertCode) = new DefaultHttpErrorCountEvent(
+    source = Source,
+    name = s"Http5xxErrorCount-$alertCode",
+    data = Map (
+      "Count" -> "1"
+    )
+  )
+
+  def apply(source: String, exception: HttpException, alertCode: AlertCode) = new DefaultHttpErrorCountEvent(
+    source = Source,
+    name = if (exception.responseCode >= 500) s"Http5xxErrorCount-$alertCode" else s"Http4xxErrorCount-$alertCode",
+    data = Map (
+      "Count" -> "1"
+    )
+  )
 }
 
 trait ExampleTimer extends Timer with ExampleEventRecorder {

@@ -55,7 +55,7 @@ class HttpErrorCountMonitorSpec extends WordSpec with MockitoSugar with Matchers
           200 millis
         )
 
-        verify(mockHandler).handle(DefaultHttpErrorCountEvent(source, Unknown, Failure4xx))
+        verify(mockHandler).handle(DefaultHttpErrorCountEvent(source, response, Unknown))
       }
     }
 
@@ -79,7 +79,7 @@ class HttpErrorCountMonitorSpec extends WordSpec with MockitoSugar with Matchers
           200 millis
         )
 
-        verify(mockHandler).handle(DefaultHttpErrorCountEvent(source, "test-code", Failure4xx))
+        verify(mockHandler).handle(DefaultHttpErrorCountEvent(source, response, "test-code"))
       }
     }
 
@@ -102,7 +102,7 @@ class HttpErrorCountMonitorSpec extends WordSpec with MockitoSugar with Matchers
           200 millis
         )
 
-        verify(mockHandler).handle(DefaultHttpErrorCountEvent(source, Unknown, Failure5xx))
+        verify(mockHandler).handle(DefaultHttpErrorCountEvent(source, response, Unknown))
       }
 
     }
@@ -126,7 +126,7 @@ class HttpErrorCountMonitorSpec extends WordSpec with MockitoSugar with Matchers
           200 millis
         )
 
-        verify(mockHandler).handle(DefaultHttpErrorCountEvent(source, "test-code", Failure5xx))
+        verify(mockHandler).handle(DefaultHttpErrorCountEvent(source, response, "test-code"))
       }
 
     }
@@ -151,7 +151,7 @@ class HttpErrorCountMonitorSpec extends WordSpec with MockitoSugar with Matchers
           200 millis
         )
 
-        verify(mockHandler).handle(DefaultHttpErrorCountEvent(source, Unknown, Failure4xx))
+        verify(mockHandler).handle(DefaultHttpErrorCountEvent(source, exception4XX, Unknown))
       }
     }
 
@@ -175,7 +175,7 @@ class HttpErrorCountMonitorSpec extends WordSpec with MockitoSugar with Matchers
           200 millis
         )
 
-        verify(mockHandler).handle(DefaultHttpErrorCountEvent(source, "test-code", Failure4xx))
+        verify(mockHandler).handle(DefaultHttpErrorCountEvent(source, exception4XX, "test-code"))
       }
     }
 
@@ -199,7 +199,7 @@ class HttpErrorCountMonitorSpec extends WordSpec with MockitoSugar with Matchers
           200 millis
         )
 
-        verify(mockHandler).handle(DefaultHttpErrorCountEvent(source, Unknown, Failure5xx))
+        verify(mockHandler).handle(DefaultHttpErrorCountEvent(source, exception5XX, Unknown))
       }
     }
 
@@ -223,7 +223,7 @@ class HttpErrorCountMonitorSpec extends WordSpec with MockitoSugar with Matchers
           200 millis
         )
 
-        verify(mockHandler).handle(DefaultHttpErrorCountEvent(source, "test-code", Failure5xx))
+        verify(mockHandler).handle(DefaultHttpErrorCountEvent(source, exception5XX, "test-code"))
       }
     }
 

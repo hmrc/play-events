@@ -56,7 +56,7 @@ class AllMonitoringSpec extends WordSpec with MockitoSugar with Matchers {
         )
 
         verify(mockHandler).handle(DefaultHttpErrorEvent(source, response, "test-code"))
-        verify(mockHandler).handle(DefaultHttpErrorCountEvent(source, "test-code", Failure5xx))
+        verify(mockHandler).handle(DefaultHttpErrorCountEvent(source, response, "test-code"))
         verify(mockHandler).handle(isA(classOf[DefaultTimerEvent]))(isA(classOf[HeaderCarrier]))
       }
 
