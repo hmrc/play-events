@@ -31,7 +31,7 @@ object HmrcBuild extends Build {
 private object BuildDependencies {
 
   object Compile {
-    val httpVerbs = "uk.gov.hmrc" %% "http-verbs" % "1.8.0" % "provided"
+    val httpVerbs = "uk.gov.hmrc" %% "http-verbs" % "1.10.0" % "provided"
   }
 
   sealed abstract class Test(scope: String) {

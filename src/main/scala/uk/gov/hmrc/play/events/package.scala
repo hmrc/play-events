@@ -19,7 +19,6 @@ package uk.gov.hmrc.play
 package object events {
 
   type AlertCode = String
-  type FailureCode = String
 
   val Unknown: AlertCode = "Unknown"
 }
