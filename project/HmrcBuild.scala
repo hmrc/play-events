@@ -15,8 +15,8 @@ object HmrcBuild extends Build {
     .enablePlugins(SbtAutoBuildPlugin, SbtGitVersioning)
     .settings(
       name := appName,
-      targetJvm := "jvm-1.7",
-      crossScalaVersions := Seq("2.11.5"),
+      scalaVersion := "2.11.7",
+      crossScalaVersions := Seq("2.11.7"),
       libraryDependencies ++= Seq(
         Compile.httpVerbs,
         Test.scalaTest,
@@ -31,7 +31,7 @@ object HmrcBuild extends Build {
 private object BuildDependencies {
 
   object Compile {
-    val httpVerbs = "uk.gov.hmrc" %% "http-verbs" % "1.10.0" % "provided"
+    val httpVerbs = "uk.gov.hmrc" %% "http-verbs" % "2.0.0" % "provided"
   }
 
   sealed abstract class Test(scope: String) {
