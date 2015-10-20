@@ -17,7 +17,7 @@
 package uk.gov.hmrc.play.events.handlers
 
 import org.scalatest.{Matchers, WordSpec}
-import uk.gov.hmrc.play.audit.http.HeaderCarrier
+import uk.gov.hmrc.play.http.HeaderCarrier
 import uk.gov.hmrc.play.events.examples.ExampleMetricEvent
 import uk.gov.hmrc.play.events.{Loggable, Measurable}
 

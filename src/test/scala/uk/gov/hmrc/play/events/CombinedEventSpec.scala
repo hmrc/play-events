@@ -19,7 +19,7 @@ package uk.gov.hmrc.play.events
 import org.scalatest.mock.MockitoSugar
 import org.mockito.Mockito._
 import org.scalatest.{Matchers, WordSpec}
-import uk.gov.hmrc.play.audit.http.HeaderCarrier
+import uk.gov.hmrc.play.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.events.examples.ExampleCombinedEvent
 import play.api.libs.concurrent.Execution.Implicits.defaultContext

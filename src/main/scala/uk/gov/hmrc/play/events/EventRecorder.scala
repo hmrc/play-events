@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.play.events
 
-import uk.gov.hmrc.play.audit.http.HeaderCarrier
+import uk.gov.hmrc.play.http.HeaderCarrier
 import uk.gov.hmrc.play.events.handlers.{DefaultMetricsEventHandler, EventHandler, DefaultLoggerEventHandler, DefaultAlertEventHandler}
 
 trait DefaultEventRecorder extends EventRecorder {

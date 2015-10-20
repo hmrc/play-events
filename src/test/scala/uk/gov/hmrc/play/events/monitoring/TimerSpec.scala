@@ -27,7 +27,7 @@ import org.mockito.Mockito._
 import org.mockito.Matchers._
 import org.hamcrest._
 
-import uk.gov.hmrc.play.audit.http.HeaderCarrier
+import uk.gov.hmrc.play.http.HeaderCarrier
 import uk.gov.hmrc.play.events.handlers.EventHandler
 import uk.gov.hmrc.play.events.{AlertCode, Unknown}
 
