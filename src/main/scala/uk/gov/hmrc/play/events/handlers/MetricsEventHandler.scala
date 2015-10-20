@@ -17,7 +17,7 @@
 package uk.gov.hmrc.play.events.handlers
 
 import play.api.Logger
-import uk.gov.hmrc.play.audit.http.HeaderCarrier
+import uk.gov.hmrc.play.http.HeaderCarrier
 import uk.gov.hmrc.play.events.{Measurable, Recordable}
 
 object DefaultMetricsEventHandler extends MetricsEventHandler {

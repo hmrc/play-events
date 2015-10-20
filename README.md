@@ -68,7 +68,7 @@ They also typically take in an ```implicit HeaderCarrier``` in order to log the 
 ```scala
 package uk.gov.hmrc.play.events.examples
 
-import uk.gov.hmrc.play.audit.http.HeaderCarrier
+import uk.gov.hmrc.play.http.HeaderCarrier
 import uk.gov.hmrc.play.events.Auditable
 
 case class ExampleAuditEvent(source: String,
@@ -180,7 +180,7 @@ add an additional message into the logs.
 ```scala
 package uk.gov.hmrc.play.events.examples
 
-import uk.gov.hmrc.play.audit.http.HeaderCarrier
+import uk.gov.hmrc.play.http.HeaderCarrier
 import uk.gov.hmrc.play.events.AlertLevel.AlertLevel
 import uk.gov.hmrc.play.events._
 import uk.gov.hmrc.play.events.AlertCode

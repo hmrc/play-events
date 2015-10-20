@@ -24,7 +24,7 @@ import org.scalatest.{Matchers, WordSpec}
 import org.scalatest.mock.MockitoSugar
 import org.mockito.Mockito._
 
-import uk.gov.hmrc.play.audit.http.HeaderCarrier
+import uk.gov.hmrc.play.http.HeaderCarrier
 import uk.gov.hmrc.play.http.{Upstream4xxResponse, Upstream5xxResponse, HttpException}
 import uk.gov.hmrc.play.events.handlers.EventHandler
 import uk.gov.hmrc.play.events.Unknown

@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.play.events.monitoring
 
-import uk.gov.hmrc.play.audit.http.HeaderCarrier
+import uk.gov.hmrc.play.http.HeaderCarrier
 import uk.gov.hmrc.play.events.{DefaultEventRecorder, Measurable, AlertCode, Unknown}
 
 import scala.concurrent.duration.{Duration, NANOSECONDS}

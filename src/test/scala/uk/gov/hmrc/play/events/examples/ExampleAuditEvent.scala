@@ -16,8 +16,9 @@
 
 package uk.gov.hmrc.play.events.examples
 
-import uk.gov.hmrc.play.audit.http.HeaderCarrier
+import uk.gov.hmrc.play.http.HeaderCarrier
 import uk.gov.hmrc.play.events.Auditable
+import uk.gov.hmrc.play.audit.AuditExtensions._
 
 case class ExampleAuditEvent(source: String,
                              name: String,

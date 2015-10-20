@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.play.events.monitoring
 
-import uk.gov.hmrc.play.audit.http.HeaderCarrier
+import uk.gov.hmrc.play.http.HeaderCarrier
 import uk.gov.hmrc.play.events.{Recordable, Measurable, DefaultEventRecorder, AlertCode, Unknown}
 import uk.gov.hmrc.play.http.{HttpException, Upstream4xxResponse, Upstream5xxResponse}
 
