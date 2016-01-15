@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 HM Revenue & Customs
+ * Copyright 2016 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,15 +27,14 @@ trait Timer extends EventSource with DefaultEventRecorder {
   def timer[T](alertCode: AlertCode = Unknown)(function: => Future[T])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[T] = {
     val start = System.nanoTime
 
-    try {
-      function
-    } finally {
-      val stop = System.nanoTime
-      val elapsed = stop - start
+      function.andThen {
+        case _ =>
+          val stop = System.nanoTime
+          val elapsed = stop - start
 
-      record(createTimerEvent(alertCode, Duration(elapsed, NANOSECONDS)))
+          record(createTimerEvent(alertCode, Duration(elapsed, NANOSECONDS)))
+      }
     }
-  }
 
   protected def createTimerEvent(alertCode: AlertCode, duration: Duration): Measurable = DefaultTimerEvent(source, alertCode, duration)
 }

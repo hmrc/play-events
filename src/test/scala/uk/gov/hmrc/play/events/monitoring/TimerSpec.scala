@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 HM Revenue & Customs
+ * Copyright 2016 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,13 +39,12 @@ class TimerSpec extends WordSpec with MockitoSugar with Matchers {
 
   val TimeToSleep = 100 * 1000 * 1000 nanos
 
-  val testFuture = Future("Hello")
-  
-  def testCall = {
+  def testFuture = Future{
     TimeUnit.NANOSECONDS.sleep(TimeToSleep.length)
 
-    testFuture
+    "Hello"
   }
+
 
   "Timer" should {
 
@@ -58,7 +57,7 @@ class TimerSpec extends WordSpec with MockitoSugar with Matchers {
 
       val result = Await.result(
 
-        timer()(testCall),
+        timer()(testFuture),
         200 millis
       )
 
@@ -76,7 +75,7 @@ class TimerSpec extends WordSpec with MockitoSugar with Matchers {
 
       val result = Await.result(
 
-        timer("test-code")(testCall),
+        timer("test-code")(testFuture),
         200 millis
       )
 
