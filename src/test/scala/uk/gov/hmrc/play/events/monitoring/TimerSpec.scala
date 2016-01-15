@@ -37,7 +37,7 @@ class TimerSpec extends WordSpec with MockitoSugar with Matchers {
 
   val TolerancePercentage = 10
 
-  val TimeToSleep = 100 * 1000 * 1000 nanos
+  val TimeToSleep = 1000 * 1000 * 1000 nanos
 
   def testFuture = Future{
     TimeUnit.NANOSECONDS.sleep(TimeToSleep.length)
@@ -58,7 +58,7 @@ class TimerSpec extends WordSpec with MockitoSugar with Matchers {
       val result = Await.result(
 
         timer()(testFuture),
-        200 millis
+        10 seconds
       )
 
       result shouldBe "Hello"
@@ -76,7 +76,7 @@ class TimerSpec extends WordSpec with MockitoSugar with Matchers {
       val result = Await.result(
 
         timer("test-code")(testFuture),
-        200 millis
+        10 seconds
       )
 
       result shouldBe "Hello"
