@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 HM Revenue & Customs
+ * Copyright 2017 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,19 +16,22 @@
 
 package uk.gov.hmrc.play.events.handlers
 
-import play.api.Logger
-import uk.gov.hmrc.play.http.HeaderCarrier
+import org.slf4j.LoggerFactory
+import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.events.{Alertable, Recordable}
 
+import scala.concurrent.ExecutionContext
+
 object DefaultAlertEventHandler extends AlertEventHandler {
-  override def handleAlertable(alertable: Alertable) = Logger.warn(s"alert:${alertable.level}:source:${alertable.source}:code:${alertable.alertCode}:name:${alertable.name}")
+  val logger = LoggerFactory.getLogger(this.getClass)
+  override def handleAlertable(alertable: Alertable) = logger.warn(s"alert:${alertable.level}:source:${alertable.source}:code:${alertable.alertCode}:name:${alertable.name}")
 }
 
 trait AlertEventHandler extends EventHandler {
 
   def handleAlertable(alertable: Alertable)
 
-  override def handle(event: Recordable)(implicit headerCarrier: HeaderCarrier) = event match {
+  override def handle(recordable: Recordable)(implicit headerCarrier: HeaderCarrier, ec: ExecutionContext) = recordable match {
     case alertable: Alertable => handleAlertable(alertable)
     case _ =>
   }

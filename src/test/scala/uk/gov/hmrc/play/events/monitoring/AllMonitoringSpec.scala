@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 HM Revenue & Customs
+ * Copyright 2017 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,13 +20,13 @@ import org.mockito.Matchers._
 import org.scalatest.{Matchers, WordSpec}
 import org.scalatest.mock.MockitoSugar
 import org.mockito.Mockito._
-import uk.gov.hmrc.play.http.HeaderCarrier
+import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.events.handlers.EventHandler
-import uk.gov.hmrc.play.http.Upstream5xxResponse
+import uk.gov.hmrc.http.Upstream5xxResponse
 
-import scala.concurrent.{Await, Future}
-import play.api.libs.concurrent.Execution.Implicits.defaultContext
+import scala.concurrent.{Await, ExecutionContext, Future}
 import scala.concurrent.duration._
+import scala.concurrent.ExecutionContext.Implicits.global
 
 class AllMonitoringSpec extends WordSpec with MockitoSugar with Matchers {
 
@@ -57,7 +57,7 @@ class AllMonitoringSpec extends WordSpec with MockitoSugar with Matchers {
 
         verify(mockHandler).handle(DefaultHttpErrorEvent(source, response, "test-code"))
         verify(mockHandler).handle(DefaultHttpErrorCountEvent(source, response, "test-code"))
-        verify(mockHandler).handle(isA(classOf[DefaultTimerEvent]))(isA(classOf[HeaderCarrier]))
+        verify(mockHandler).handle(isA(classOf[DefaultTimerEvent]))(isA(classOf[HeaderCarrier]), isA(classOf[ExecutionContext]))
       }
 
     }

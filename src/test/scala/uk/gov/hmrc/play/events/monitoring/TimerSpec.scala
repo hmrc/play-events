@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 HM Revenue & Customs
+ * Copyright 2017 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,19 +17,19 @@
 package uk.gov.hmrc.play.events.monitoring
 
 import java.util.concurrent.TimeUnit
-import scala.concurrent.{Await, Future}
-import scala.concurrent.duration._
-import play.api.libs.concurrent.Execution.Implicits.defaultContext
 
+import scala.concurrent.{Await, ExecutionContext, Future}
+import scala.concurrent.duration._
 import org.scalatest.{Matchers, WordSpec}
 import org.scalatest.mock.MockitoSugar
 import org.mockito.Mockito._
 import org.mockito.Matchers._
 import org.hamcrest._
-
-import uk.gov.hmrc.play.http.HeaderCarrier
+import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.events.handlers.EventHandler
 import uk.gov.hmrc.play.events.{AlertCode, Unknown}
+
+import scala.concurrent.ExecutionContext.Implicits.global
 
 class TimerSpec extends WordSpec with MockitoSugar with Matchers {
 
@@ -63,7 +63,7 @@ class TimerSpec extends WordSpec with MockitoSugar with Matchers {
 
       result shouldBe "Hello"
 
-      verify(mockHandler).handle(argThat(new DefaultTimerEventMatcher(source, Unknown, TimeToSleep, TolerancePercentage)))(isA(classOf[HeaderCarrier]))
+      verify(mockHandler).handle(argThat(new DefaultTimerEventMatcher(source, Unknown, TimeToSleep, TolerancePercentage)))(isA(classOf[HeaderCarrier]), isA(classOf[ExecutionContext]))
     }
 
     "generate Monitor events containing call duration with alert code" in new Timer {
@@ -81,7 +81,7 @@ class TimerSpec extends WordSpec with MockitoSugar with Matchers {
 
       result shouldBe "Hello"
 
-      verify(mockHandler).handle(argThat(new DefaultTimerEventMatcher(source, "test-code", TimeToSleep, TolerancePercentage)))(isA(classOf[HeaderCarrier]))
+      verify(mockHandler).handle(argThat(new DefaultTimerEventMatcher(source, "test-code", TimeToSleep, TolerancePercentage)))(isA(classOf[HeaderCarrier]), isA(classOf[ExecutionContext]))
     }
   }
 }

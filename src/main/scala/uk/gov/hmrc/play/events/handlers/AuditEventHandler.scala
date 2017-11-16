@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 HM Revenue & Customs
+ * Copyright 2017 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,25 +16,24 @@
 
 package uk.gov.hmrc.play.events.handlers
 
-import play.api.libs.concurrent.Execution.Implicits.defaultContext
-import uk.gov.hmrc.play.http.HeaderCarrier
+import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.events.{Auditable, Recordable}
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 abstract class AuditEventHandler extends EventHandler {
 
   def auditConnector: AuditConnector
 
-  override def handle(recordable: Recordable)(implicit headerCarrier: HeaderCarrier) = {
+  override def handle(recordable: Recordable)(implicit headerCarrier: HeaderCarrier, ec: ExecutionContext) = {
     recordable match {
       case event: Auditable => handleAudit(event)
       case _ =>
     }
   }
 
-  def handleAudit(auditable: Auditable)(implicit headerCarrier: HeaderCarrier): Unit = {
+  def handleAudit(auditable: Auditable)(implicit headerCarrier: HeaderCarrier, ec: ExecutionContext): Unit = {
     Future {
       auditConnector.sendEvent(auditable.event)
     }

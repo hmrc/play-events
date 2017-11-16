@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 HM Revenue & Customs
+ * Copyright 2017 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.play.events
 
-import uk.gov.hmrc.play.audit.model.{AuditEvent, DataEvent}
+import uk.gov.hmrc.play.audit.model.DataEvent
 
 trait Recordable
 
@@ -27,7 +27,7 @@ trait Auditable extends Recordable {
   def tags: Map[String, String]
   def privateData: Map[String, String]
 
-  val event: AuditEvent =
+  val event: DataEvent =
     DataEvent(
       auditSource = source,
       auditType = name,

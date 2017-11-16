@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 HM Revenue & Customs
+ * Copyright 2017 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,20 +16,22 @@
 
 package uk.gov.hmrc.play.events.handlers
 
-import play.api.Logger
-import uk.gov.hmrc.play.http.HeaderCarrier
+import org.slf4j.LoggerFactory
+import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.events.{Loggable, Recordable}
 
-object DefaultLoggerEventHandler extends LoggerEventHandler {
+import scala.concurrent.ExecutionContext
 
-  def handleLoggable(loggable: Loggable) = Logger.info(s"event::logger::${loggable.log}")
+object DefaultLoggerEventHandler extends LoggerEventHandler {
+  val logger = LoggerFactory.getLogger(this.getClass)
+  def handleLoggable(loggable: Loggable) = logger.info(s"event::logger::${loggable.log}")
 }
 
 trait LoggerEventHandler extends EventHandler {
 
   def handleLoggable(loggable: Loggable)
 
-  override def handle(event: Recordable)(implicit headerCarrier: HeaderCarrier): Unit = event match {
+  override def handle(event: Recordable)(implicit headerCarrier: HeaderCarrier, ec: ExecutionContext): Unit = event match {
     case loggable: Loggable => handleLoggable(loggable)
     case _ =>
   }

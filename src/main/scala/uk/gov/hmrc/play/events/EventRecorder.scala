@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 HM Revenue & Customs
+ * Copyright 2017 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,8 +16,10 @@
 
 package uk.gov.hmrc.play.events
 
-import uk.gov.hmrc.play.http.HeaderCarrier
-import uk.gov.hmrc.play.events.handlers.{DefaultMetricsEventHandler, EventHandler, DefaultLoggerEventHandler, DefaultAlertEventHandler}
+import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.play.events.handlers.{DefaultAlertEventHandler, DefaultLoggerEventHandler, DefaultMetricsEventHandler, EventHandler}
+
+import scala.concurrent.ExecutionContext
 
 trait DefaultEventRecorder extends EventRecorder {
   override def eventHandlers: Set[EventHandler] = Set(DefaultLoggerEventHandler, DefaultMetricsEventHandler, DefaultAlertEventHandler)
@@ -27,6 +29,6 @@ trait EventRecorder {
 
   def eventHandlers: Set[EventHandler]
 
-  def record(recordable: Recordable)(implicit headerCarrier: HeaderCarrier) =
+  def record(recordable: Recordable)(implicit headerCarrier: HeaderCarrier, ec: ExecutionContext) =
     eventHandlers.foreach(eh => eh.handle(recordable))
 }

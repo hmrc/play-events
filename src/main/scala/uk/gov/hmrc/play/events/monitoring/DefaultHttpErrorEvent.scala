@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 HM Revenue & Customs
+ * Copyright 2017 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@ package uk.gov.hmrc.play.events.monitoring
 
 import uk.gov.hmrc.play.events.AlertLevel._
 import uk.gov.hmrc.play.events.{Measurable, Alertable, AlertCode}
-import uk.gov.hmrc.play.http.{Upstream4xxResponse, Upstream5xxResponse, HttpException}
+import uk.gov.hmrc.http.{Upstream4xxResponse, Upstream5xxResponse, HttpException}
 
 case class DefaultHttpErrorEvent(source: String,
                                  name: String,

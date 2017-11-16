@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 HM Revenue & Customs
+ * Copyright 2017 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,13 +19,13 @@ package uk.gov.hmrc.play.events.monitoring
 import org.scalatest.{Matchers, WordSpec}
 import org.scalatest.mock.MockitoSugar
 import org.mockito.Mockito._
-import uk.gov.hmrc.play.http.HeaderCarrier
+import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.events.handlers.EventHandler
-import uk.gov.hmrc.play.http.Upstream5xxResponse
+import uk.gov.hmrc.http.Upstream5xxResponse
 
 import scala.concurrent.{Await, Future}
-import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import scala.concurrent.duration._
+import scala.concurrent.ExecutionContext.Implicits.global
 
 class StackableMonitoringSpec extends WordSpec with MockitoSugar with Matchers {
 

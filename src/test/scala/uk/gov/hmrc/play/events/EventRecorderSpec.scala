@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 HM Revenue & Customs
+ * Copyright 2017 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,9 +19,10 @@ package uk.gov.hmrc.play.events
 import org.mockito.Mockito._
 import org.scalatest.WordSpec
 import org.scalatest.mock.MockitoSugar
-import uk.gov.hmrc.play.http.HeaderCarrier
+import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.events.examples.ExampleAuditEvent
 import uk.gov.hmrc.play.events.handlers.EventHandler
+import scala.concurrent.ExecutionContext.Implicits.global
 
 class EventRecorderSpec extends WordSpec with MockitoSugar {
 
