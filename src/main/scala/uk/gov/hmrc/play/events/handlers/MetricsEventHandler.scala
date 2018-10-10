@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 HM Revenue & Customs
+ * Copyright 2018 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,22 +16,22 @@
 
 package uk.gov.hmrc.play.events.handlers
 
-import org.slf4j.LoggerFactory
+import org.slf4j.{Logger, LoggerFactory}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.events.{Measurable, Recordable}
 
 import scala.concurrent.ExecutionContext
 
 object DefaultMetricsEventHandler extends MetricsEventHandler {
-  val logger = LoggerFactory.getLogger(this.getClass)
-  override def handleMeasurable(measurable: Measurable) = logger.info(s"metric:source:${measurable.source}:name:${measurable.name}:data:${measurable.data}")
+  val logger: Logger = LoggerFactory.getLogger(this.getClass)
+  override def handleMeasurable(measurable: Measurable): Unit = logger.info(s"metric:source:${measurable.source}:name:${measurable.name}:data:${measurable.data}")
 }
 
 trait MetricsEventHandler extends EventHandler {
 
   def handleMeasurable(measurable: Measurable)
 
-  override def handle(event: Recordable)(implicit headerCarrier: HeaderCarrier, ec: ExecutionContext) = {
+  override def handle(event: Recordable)(implicit headerCarrier: HeaderCarrier, ec: ExecutionContext): Unit = {
     event match {
       case measurable: Measurable => handleMeasurable(measurable)
       case _ =>

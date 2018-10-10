@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 HM Revenue & Customs
+ * Copyright 2018 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@ abstract class AuditEventHandler extends EventHandler {
 
   def auditConnector: AuditConnector
 
-  override def handle(recordable: Recordable)(implicit headerCarrier: HeaderCarrier, ec: ExecutionContext) = {
+  override def handle(recordable: Recordable)(implicit headerCarrier: HeaderCarrier, ec: ExecutionContext): Unit = {
     recordable match {
       case event: Auditable => handleAudit(event)
       case _ =>
