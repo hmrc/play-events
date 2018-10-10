@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 HM Revenue & Customs
+ * Copyright 2018 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,15 +16,15 @@
 
 package uk.gov.hmrc.play.events.handlers
 
-import org.slf4j.LoggerFactory
+import org.slf4j.{Logger, LoggerFactory}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.events.{Loggable, Recordable}
 
 import scala.concurrent.ExecutionContext
 
 object DefaultLoggerEventHandler extends LoggerEventHandler {
-  val logger = LoggerFactory.getLogger(this.getClass)
-  def handleLoggable(loggable: Loggable) = logger.info(s"event::logger::${loggable.log}")
+  val logger: Logger = LoggerFactory.getLogger(this.getClass)
+  def handleLoggable(loggable: Loggable): Unit = logger.info(s"event::logger::${loggable.log}")
 }
 
 trait LoggerEventHandler extends EventHandler {
