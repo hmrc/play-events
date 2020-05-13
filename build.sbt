@@ -27,7 +27,7 @@ lazy val PlayEvents = (project in file("."))
   )
 
 val httpVerbs = "uk.gov.hmrc" %% "http-core" % "2.4.0" % "provided"
-val httpAuditing = "uk.gov.hmrc" %% "play-auditing" % "4.2.0-play-26" % "provided"
+val httpAuditing = "uk.gov.hmrc" %% "play-auditing" % "4.3.0-play-26" % "provided"
 
 val scope = "test"
 val scalaTest = "org.scalatest" %% "scalatest" % "3.0.8" % scope
