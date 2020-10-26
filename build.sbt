@@ -7,14 +7,16 @@ import uk.gov.hmrc.SbtArtifactory.autoImport.makePublicallyAvailableOnBintray
 
 val appName = "play-events"
 
+val scala2_12 = "2.12.11"
+
 lazy val PlayEvents = (project in file("."))
   .enablePlugins(SbtAutoBuildPlugin, SbtGitVersioning, SbtArtifactory)
-  .settings(majorVersion := 2)
-  .settings(makePublicallyAvailableOnBintray := true)
   .settings(
     name := appName,
-    scalaVersion := "2.11.12",
-    crossScalaVersions := Seq("2.11.12"),
+    majorVersion := 2,
+    makePublicallyAvailableOnBintray := true,
+    scalaVersion := scala2_12,
+    resolvers += "releases" at "https://dl.bintray.com/hmrc/releases/",
     libraryDependencies ++= Seq(
       httpVerbs,
       httpAuditing,
@@ -22,12 +24,11 @@ lazy val PlayEvents = (project in file("."))
       pegdown,
       mockito,
       hamcrest
-    ),
-    developers := List[Developer]()
+    )
   )
 
-val httpVerbs = "uk.gov.hmrc" %% "http-core" % "2.4.0" % "provided"
-val httpAuditing = "uk.gov.hmrc" %% "play-auditing" % "4.3.0-play-26" % "provided"
+val httpVerbs = "uk.gov.hmrc" %% "http-verbs-play-26" % "12.0.0"
+val httpAuditing = "uk.gov.hmrc" %% "play-auditing-play-26" % "5.8.0"
 
 val scope = "test"
 val scalaTest = "org.scalatest" %% "scalatest" % "3.0.8" % scope
