@@ -13,7 +13,7 @@ lazy val PlayEvents = (project in file("."))
   .settings(
     name := appName,
     majorVersion := 2,
-    publishArtifact := true,
+    isPublicArtefact:= true,
     scalaVersion := scala2_12,
     resolvers += "releases" at "https://dl.bintray.com/hmrc/releases/",
     libraryDependencies ++= Seq(
