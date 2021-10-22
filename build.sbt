@@ -6,7 +6,7 @@ import uk.gov.hmrc.versioning.SbtGitVersioning.autoImport.majorVersion
 
 val appName = "play-events"
 
-val scala2_12 = "2.12.11"
+val scala2_12 = "2.12.13"
 
 lazy val PlayEvents = (project in file("."))
   .enablePlugins(SbtAutoBuildPlugin, SbtGitVersioning, SbtArtifactory)
@@ -20,17 +20,14 @@ lazy val PlayEvents = (project in file("."))
       httpVerbs,
       httpAuditing,
       scalaTest,
-      pegdown,
-      mockito,
-      hamcrest
+      mockito
     )
   )
 
-val httpVerbs = "uk.gov.hmrc" %% "http-verbs-play-26" % "13.3.0"
-val httpAuditing = "uk.gov.hmrc" %% "play-auditing-play-26" % "7.3.0"
+val httpVerbs = "uk.gov.hmrc" %% "http-verbs-play-28" % "13.10.0"
+val httpAuditing = "uk.gov.hmrc" %% "play-auditing-play-28" % "7.10.0"
 
 val scope = "test"
-val scalaTest = "org.scalatest" %% "scalatest" % "3.0.8" % scope
-val mockito = "org.mockito" % "mockito-all" % "1.10.19" % scope
-val pegdown = "org.pegdown" % "pegdown" % "1.6.0" % scope
-val hamcrest = "org.hamcrest" % "hamcrest-all" % "1.3" % scope
+val scalaTest = "uk.gov.hmrc" %% "bootstrap-test-play-28" % "5.16.0" % scope
+val mockito = "org.scalatestplus"  %% "mockito-3-4"  % "3.2.9.0" % scope
+

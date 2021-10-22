@@ -18,14 +18,16 @@ package uk.gov.hmrc.play.events
 
 import org.scalatestplus.mockito.MockitoSugar
 import org.mockito.Mockito._
-import org.scalatest.{Matchers, WordSpec}
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpecLike
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.events.examples.ExampleCombinedEvent
 import uk.gov.hmrc.play.events.handlers._
+
 import scala.concurrent.ExecutionContext.Implicits.global
 
-class CombinedEventSpec extends WordSpec with Matchers with MockitoSugar {
+class CombinedEventSpec extends AnyWordSpecLike with Matchers with MockitoSugar {
 
   "CombinedEvent" should {
 

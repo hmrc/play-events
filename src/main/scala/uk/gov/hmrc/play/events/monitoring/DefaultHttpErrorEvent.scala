@@ -17,8 +17,8 @@
 package uk.gov.hmrc.play.events.monitoring
 
 import uk.gov.hmrc.play.events.AlertLevel._
-import uk.gov.hmrc.play.events.{Measurable, Alertable, AlertCode}
-import uk.gov.hmrc.http.{Upstream4xxResponse, Upstream5xxResponse, HttpException}
+import uk.gov.hmrc.play.events.{AlertCode, Alertable, Measurable}
+import uk.gov.hmrc.http.{HttpException, UpstreamErrorResponse}
 
 case class DefaultHttpErrorEvent(source: String,
                                  name: String,
@@ -28,29 +28,34 @@ case class DefaultHttpErrorEvent(source: String,
 
 object DefaultHttpErrorEvent {
 
-  def apply(source: String, response: Upstream4xxResponse, alertCode: AlertCode) = new DefaultHttpErrorEvent(
-    source = source,
-    name = "Http4xxError",
-    level = MAJOR,
-    alertCode = alertCode,
-    data = Map (
-      "Error Message" -> response.message,
-      "Code" -> response.upstreamResponseCode.toString,
-      "Report As" -> response.reportAs.toString
-    )
-  )
-
-  def apply(source: String, response: Upstream5xxResponse, alertCode: AlertCode) = new DefaultHttpErrorEvent(
-    source = source,
-    name = "Http5xxError",
-    level = CRITICAL,
-    alertCode = alertCode,
-    data = Map(
-      "Error Message" -> response.message,
-      "Code" -> response.upstreamResponseCode.toString,
-      "Report As" -> response.reportAs.toString
-    )
-  )
+  def apply(source: String, response: UpstreamErrorResponse, alertCode: AlertCode) = {
+    response match {
+      case UpstreamErrorResponse.Upstream4xxResponse(_) =>
+        new DefaultHttpErrorEvent(
+          source = source,
+          name = "Http4xxError",
+          level = MAJOR,
+          alertCode = alertCode,
+          data = Map(
+            "Error Message" -> response.message,
+            "Code" -> response.statusCode.toString,
+            "Report As" -> response.reportAs.toString
+          )
+        )
+      case UpstreamErrorResponse.Upstream5xxResponse(_) =>
+        new DefaultHttpErrorEvent(
+          source = source,
+          name = "Http5xxError",
+          level = CRITICAL,
+          alertCode = alertCode,
+          data = Map(
+            "Error Message" -> response.message,
+            "Code" -> response.statusCode.toString,
+            "Report As" -> response.reportAs.toString
+          )
+        )
+    }
+  }
 
   def apply(source: String, exception: HttpException, alertCode: AlertCode) = new DefaultHttpErrorEvent(
     source = source,

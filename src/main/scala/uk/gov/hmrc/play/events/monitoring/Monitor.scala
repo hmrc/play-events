@@ -16,9 +16,8 @@
 
 package uk.gov.hmrc.play.events.monitoring
 
-import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.events.{Recordable, Measurable, DefaultEventRecorder, AlertCode, Unknown}
-import uk.gov.hmrc.http.{HttpException, Upstream4xxResponse, Upstream5xxResponse}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpException, UpstreamErrorResponse}
+import uk.gov.hmrc.play.events.{AlertCode, DefaultEventRecorder, Measurable, Recordable, Unknown}
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.Failure
@@ -33,16 +32,13 @@ trait HttpErrorMonitor extends Monitor {
   override def monitor[T](alertCode: AlertCode = Unknown)(future: Future[T])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[T] = {
     super.monitor(alertCode) {
       future.andThen {
-        case Failure(exception: Upstream4xxResponse) => record(createHttpErrorEvent(source, exception, alertCode))
-        case Failure(exception: Upstream5xxResponse) => record(createHttpErrorEvent(source, exception, alertCode))
+        case Failure(exception: UpstreamErrorResponse) => record(createHttpErrorEvent(source, exception, alertCode))
         case Failure(exception: HttpException) => record(createHttpErrorEvent(source, exception, alertCode))
       }
     }
   }
 
-  protected def createHttpErrorEvent(source: String, response: Upstream4xxResponse, alertCode: AlertCode): Recordable = DefaultHttpErrorEvent(source, response, alertCode)
-
-  protected def createHttpErrorEvent(source: String, response: Upstream5xxResponse, alertCode: AlertCode): Recordable = DefaultHttpErrorEvent(source, response, alertCode)
+  protected def createHttpErrorEvent(source: String, response: UpstreamErrorResponse, alertCode: AlertCode): Recordable = DefaultHttpErrorEvent(source, response, alertCode)
 
   protected def createHttpErrorEvent(source: String, response: HttpException, alertCode: AlertCode): Recordable = DefaultHttpErrorEvent(source, response, alertCode)
 }
@@ -52,16 +48,14 @@ trait HttpErrorCountMonitor extends Monitor {
   override def monitor[T](alertCode: AlertCode = Unknown)(future: Future[T])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[T] = {
     super.monitor(alertCode) {
       future.andThen {
-        case Failure(exception: Upstream4xxResponse) => record(createHttpErrorCountEvent(source, exception, alertCode))
-        case Failure(exception: Upstream5xxResponse) => record(createHttpErrorCountEvent(source, exception, alertCode))
+        case Failure(exception: UpstreamErrorResponse) => record(createHttpErrorCountEvent(source, exception, alertCode))
         case Failure(exception: HttpException) => record(createHttpErrorCountEvent(source, exception, alertCode))
       }
     }
   }
 
-  protected def createHttpErrorCountEvent(source: String, response: Upstream4xxResponse, alertCode: AlertCode): Measurable = DefaultHttpErrorCountEvent(source, response, alertCode)
 
-  protected def createHttpErrorCountEvent(source: String, response: Upstream5xxResponse, alertCode: AlertCode): Measurable = DefaultHttpErrorCountEvent(source, response, alertCode)
+  protected def createHttpErrorCountEvent(source: String, response: UpstreamErrorResponse, alertCode: AlertCode): Measurable = DefaultHttpErrorCountEvent(source, response, alertCode)
 
   protected def createHttpErrorCountEvent(source: String, response: HttpException, alertCode: AlertCode): Measurable = DefaultHttpErrorCountEvent(source, response, alertCode)
 }

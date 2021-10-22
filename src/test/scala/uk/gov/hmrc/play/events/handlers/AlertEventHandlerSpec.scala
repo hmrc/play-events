@@ -16,13 +16,15 @@
 
 package uk.gov.hmrc.play.events.handlers
 
-import org.scalatest.{Matchers, WordSpec}
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpecLike
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.events.examples.ExampleAlertEvent
 import uk.gov.hmrc.play.events.{Alertable, Loggable}
+
 import scala.concurrent.ExecutionContext.Implicits.global
 
-class AlertEventHandlerSpec extends WordSpec with Matchers {
+class AlertEventHandlerSpec extends AnyWordSpecLike with Matchers {
 
   implicit val hc = HeaderCarrier()
 

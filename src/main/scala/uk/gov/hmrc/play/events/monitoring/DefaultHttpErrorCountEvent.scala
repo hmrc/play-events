@@ -17,7 +17,7 @@
 package uk.gov.hmrc.play.events.monitoring
 
 import uk.gov.hmrc.play.events._
-import uk.gov.hmrc.http.{HttpException, Upstream5xxResponse, Upstream4xxResponse}
+import uk.gov.hmrc.http.{HttpException, UpstreamErrorResponse}
 
 case class DefaultHttpErrorCountEvent(source: String,
                                       name: String,
@@ -25,17 +25,9 @@ case class DefaultHttpErrorCountEvent(source: String,
 
 object DefaultHttpErrorCountEvent {
 
-  def apply(source: String, response: Upstream4xxResponse, alertCode: AlertCode) = new DefaultHttpErrorCountEvent(
+  def apply(source: String, response: UpstreamErrorResponse, alertCode: AlertCode) = new DefaultHttpErrorCountEvent(
     source = source,
     name = "Http4xxErrorCount",
-    data = Map (
-      "Count" -> "1"
-    )
-  )
-
-  def apply(source: String, response: Upstream5xxResponse, alertCode: AlertCode) = new DefaultHttpErrorCountEvent(
-    source = source,
-    name = "Http5xxErrorCount",
     data = Map (
       "Count" -> "1"
     )

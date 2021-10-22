@@ -17,21 +17,22 @@
 package uk.gov.hmrc.play.events.monitoring
 
 import java.util.concurrent.TimeUnit
-
 import scala.concurrent.{Await, ExecutionContext, Future}
 import scala.concurrent.duration._
-import org.scalatest.{Matchers, WordSpec}
-import org.scalatest.mock.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
 import org.mockito.Mockito._
-import org.mockito.Matchers._
+import org.scalatest.matchers.should.Matchers
 import org.hamcrest._
+import org.mockito.ArgumentMatchers.isA
+import org.mockito.hamcrest.MockitoHamcrest.argThat
+import org.scalatest.wordspec.AnyWordSpecLike
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.events.handlers.EventHandler
 import uk.gov.hmrc.play.events.{AlertCode, Unknown}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
-class TimerSpec extends WordSpec with MockitoSugar with Matchers {
+class TimerSpec extends AnyWordSpecLike with MockitoSugar with Matchers {
 
   implicit val hc = new HeaderCarrier()
 
