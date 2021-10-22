@@ -18,18 +18,17 @@ package uk.gov.hmrc.play.events.monitoring
 
 import scala.concurrent.{Await, Future}
 import scala.concurrent.duration._
-
-import org.scalatest.{Matchers, WordSpec}
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.matchers.should.Matchers
+import org.scalatestplus.mockito.MockitoSugar
+import org.scalatest.wordspec.AnyWordSpecLike
 import org.mockito.Mockito._
-
-import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.http.{Upstream4xxResponse, Upstream5xxResponse, HttpException}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpException, UpstreamErrorResponse}
 import uk.gov.hmrc.play.events.handlers.EventHandler
 import uk.gov.hmrc.play.events.Unknown
+
 import scala.concurrent.ExecutionContext.Implicits.global
 
-class HttpErrorCountMonitorSpec extends WordSpec with MockitoSugar with Matchers {
+class HttpErrorCountMonitorSpec extends AnyWordSpecLike with MockitoSugar with Matchers {
 
   implicit val hc = new HeaderCarrier()
 
@@ -43,9 +42,9 @@ class HttpErrorCountMonitorSpec extends WordSpec with MockitoSugar with Matchers
 
       override def eventHandlers = Set(mockHandler)
 
-      val response = new Upstream4xxResponse("Error Msg", 403, 60)
+      val response = UpstreamErrorResponse("Error Msg", 403, 60)
 
-      intercept[Upstream4xxResponse] {
+      intercept[UpstreamErrorResponse] {
         Await.result(
 
           monitor() {
@@ -67,9 +66,9 @@ class HttpErrorCountMonitorSpec extends WordSpec with MockitoSugar with Matchers
 
       override def eventHandlers = Set(mockHandler)
 
-      val response = new Upstream4xxResponse("Error Msg", 403, 60)
+      val response = UpstreamErrorResponse("Error Msg", 403, 60)
 
-      intercept[Upstream4xxResponse] {
+      intercept[UpstreamErrorResponse] {
         Await.result(
 
           monitor("test-code") {
@@ -90,9 +89,9 @@ class HttpErrorCountMonitorSpec extends WordSpec with MockitoSugar with Matchers
 
       override def eventHandlers = Set(mockHandler)
 
-      val response = new Upstream5xxResponse("Error Msg", 500, 60)
+      val response = UpstreamErrorResponse("Error Msg", 500, 60)
 
-      intercept[Upstream5xxResponse] {
+      intercept[UpstreamErrorResponse] {
         Await.result(
 
           monitor() {
@@ -114,9 +113,9 @@ class HttpErrorCountMonitorSpec extends WordSpec with MockitoSugar with Matchers
 
       override def eventHandlers = Set(mockHandler)
 
-      val response = new Upstream5xxResponse("Error Msg", 500, 60)
+      val response = UpstreamErrorResponse("Error Msg", 500, 60)
 
-      intercept[Upstream5xxResponse] {
+      intercept[UpstreamErrorResponse] {
         Await.result(
 
           monitor("test-code") {
@@ -244,7 +243,7 @@ class HttpErrorCountMonitorSpec extends WordSpec with MockitoSugar with Matchers
         200 millis
       )
 
-      verifyZeroInteractions(mockHandler)
+      verifyNoInteractions(mockHandler)
     }
 
   }

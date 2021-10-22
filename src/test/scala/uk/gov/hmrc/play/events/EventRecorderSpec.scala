@@ -17,14 +17,15 @@
 package uk.gov.hmrc.play.events
 
 import org.mockito.Mockito._
-import org.scalatest.WordSpec
+import org.scalatest.wordspec.AnyWordSpecLike
 import org.scalatestplus.mockito.MockitoSugar
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.events.examples.ExampleAuditEvent
 import uk.gov.hmrc.play.events.handlers.EventHandler
+
 import scala.concurrent.ExecutionContext.Implicits.global
 
-class EventRecorderSpec extends WordSpec with MockitoSugar {
+class EventRecorderSpec extends AnyWordSpecLike with MockitoSugar {
 
   "EventRecorder" should {
 

@@ -17,15 +17,16 @@
 package uk.gov.hmrc.play.events.handlers
 
 import org.mockito.Mockito._
-import org.scalatest.WordSpec
+import org.scalatest.wordspec.AnyWordSpecLike
 import org.scalatestplus.mockito.MockitoSugar
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.events.Loggable
 import uk.gov.hmrc.play.events.examples.ExampleAuditEvent
+
 import scala.concurrent.ExecutionContext.Implicits.global
 
-class AuditEventHandlerSpec extends WordSpec with MockitoSugar {
+class AuditEventHandlerSpec extends AnyWordSpecLike with MockitoSugar {
 
   implicit val hc = HeaderCarrier()
 
@@ -59,7 +60,7 @@ class AuditEventHandlerSpec extends WordSpec with MockitoSugar {
       //Calling a nested future above, need to wait for it
       Thread.sleep(200)
 
-      verifyZeroInteractions(mockAuditConnector)
+      verifyNoMoreInteractions(mockAuditConnector)
     }
 
   }
