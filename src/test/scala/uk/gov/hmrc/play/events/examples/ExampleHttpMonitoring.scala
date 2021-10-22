@@ -19,7 +19,7 @@ package uk.gov.hmrc.play.events.examples
 import uk.gov.hmrc.play.events._
 import uk.gov.hmrc.play.events.handlers.{DefaultAlertEventHandler, DefaultMetricsEventHandler, EventHandler}
 import uk.gov.hmrc.play.events.monitoring._
-import uk.gov.hmrc.http.{HttpException, Upstream5xxResponse, Upstream4xxResponse}
+import uk.gov.hmrc.http.{HttpException, UpstreamErrorResponse}
 
 import scala.concurrent.duration.Duration
 
@@ -37,9 +37,8 @@ trait ExampleHttpErrorCountMonitor extends HttpErrorCountMonitor with ExampleEve
 
   override val source = "TestApp"
 
-  override def createHttpErrorCountEvent(source: String, response: Upstream4xxResponse, alertCode: AlertCode): Measurable = ExampleHttpErrorCountEvent(source, response, alertCode)
 
-  override def createHttpErrorCountEvent(source: String, response: Upstream5xxResponse, alertCode: AlertCode): Measurable = ExampleHttpErrorCountEvent(source, response, alertCode)
+  override def createHttpErrorCountEvent(source: String, response: UpstreamErrorResponse, alertCode: AlertCode): Measurable = ExampleHttpErrorCountEvent(source, response, alertCode)
 
   override def createHttpErrorCountEvent(source: String, response: HttpException, alertCode: AlertCode): Measurable = ExampleHttpErrorCountEvent(source, response, alertCode)
 }
@@ -52,21 +51,26 @@ object ExampleHttpErrorCountEvent {
 
   private val Source = "TestApp"
 
-  def apply(source: String, response: Upstream4xxResponse, alertCode: AlertCode) = new DefaultHttpErrorCountEvent(
-    source = Source,
-    name = s"Http4xxErrorCount-$alertCode",
-    data = Map (
-      "Count" -> "1"
-    )
-  )
-
-  def apply(source: String, response: Upstream5xxResponse, alertCode: AlertCode) = new DefaultHttpErrorCountEvent(
-    source = Source,
-    name = s"Http5xxErrorCount-$alertCode",
-    data = Map (
-      "Count" -> "1"
-    )
-  )
+  def apply(source: String, response: UpstreamErrorResponse, alertCode: AlertCode) = {
+    response match {
+      case UpstreamErrorResponse.Upstream4xxResponse(_) =>
+        new DefaultHttpErrorCountEvent(
+          source = Source,
+          name = s"Http4xxErrorCount-$alertCode",
+          data = Map (
+            "Count" -> "1"
+          )
+        )
+      case UpstreamErrorResponse.Upstream5xxResponse(_) =>
+        new DefaultHttpErrorCountEvent(
+          source = Source,
+          name = s"Http5xxErrorCount-$alertCode",
+          data = Map (
+            "Count" -> "1"
+          )
+        )
+    }
+  }
 
   def apply(source: String, exception: HttpException, alertCode: AlertCode) = new DefaultHttpErrorCountEvent(
     source = Source,
