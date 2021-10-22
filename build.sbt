@@ -8,7 +8,6 @@ val appName = "play-events"
 
 val scala2_12 = "2.12.13"
 
-
 lazy val PlayEvents = (project in file("."))
   .enablePlugins(SbtAutoBuildPlugin, SbtGitVersioning, SbtArtifactory)
   .settings(
