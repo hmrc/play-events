@@ -6,6 +6,7 @@ import uk.gov.hmrc.versioning.SbtGitVersioning.autoImport.majorVersion
 
 val appName = "play-events"
 
+
 val scala2_12 = "2.12.13"
 
 lazy val PlayEvents = (project in file("."))
