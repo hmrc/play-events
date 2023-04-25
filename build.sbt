@@ -25,9 +25,9 @@ lazy val PlayEvents = (project in file("."))
     )
   )
 
-val httpVerbs = "uk.gov.hmrc" %% "http-verbs-play-28" % "13.10.0"
-val httpAuditing = "uk.gov.hmrc" %% "play-auditing-play-28" % "7.10.0"
+val httpVerbs = "uk.gov.hmrc" %% "http-verbs-play-28" % "14.9.0"
+val httpAuditing = "uk.gov.hmrc" %% "play-auditing-play-28" % "8.6.0"
 
 val scope = "test"
-val scalaTest = "uk.gov.hmrc" %% "bootstrap-test-play-28" % "5.16.0" % scope
+val scalaTest = "uk.gov.hmrc" %% "bootstrap-test-play-28" % "7.15.0" % scope
 val mockito = "org.scalatestplus"  %% "mockito-3-4"  % "3.2.9.0" % scope
