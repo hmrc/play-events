@@ -4,6 +4,4 @@ resolvers += Resolver.jcenterRepo
 resolvers += "hmrc-releases" at "https://artefacts.tax.service.gov.uk/artifactory/hmrc-releases/"
 
 
-addSbtPlugin("uk.gov.hmrc" % "sbt-auto-build" % "3.5.0")
-addSbtPlugin("uk.gov.hmrc" % "sbt-git-versioning" % "2.4.0")
-addSbtPlugin("uk.gov.hmrc" % "sbt-artifactory" % "2.0.0")
+addSbtPlugin("uk.gov.hmrc" % "sbt-auto-build" % "3.9.0")
