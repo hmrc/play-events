@@ -1,16 +1,14 @@
-import uk.gov.hmrc.SbtArtifactory
 import sbt.Keys._
 import uk.gov.hmrc.SbtAutoBuildPlugin
-import uk.gov.hmrc.versioning.SbtGitVersioning
 import uk.gov.hmrc.versioning.SbtGitVersioning.autoImport.majorVersion
 
 val appName = "play-events"
 
 
-val scala2_12 = "2.12.13"
+val scala2_12 = "2.13.10"
 
 lazy val PlayEvents = (project in file("."))
-  .enablePlugins(SbtAutoBuildPlugin, SbtGitVersioning, SbtArtifactory)
+  .enablePlugins(SbtAutoBuildPlugin)
   .settings(
     name := appName,
     majorVersion := 2,
@@ -22,7 +20,8 @@ lazy val PlayEvents = (project in file("."))
       httpAuditing,
       scalaTest,
       mockito,
-    )
+    ),
+    scalacOptions ++= Seq("-feature", "-language:postfixOps")
   )
 
 val httpVerbs = "uk.gov.hmrc" %% "http-verbs-play-28" % "14.9.0"
