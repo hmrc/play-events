@@ -31,7 +31,7 @@ class CombinedEventSpec extends AnyWordSpecLike with Matchers with MockitoSugar 
   "CombinedEvent" should {
 
     "be handled by all event handlers" in {
-      implicit val hc = new HeaderCarrier()
+      implicit val hc: HeaderCarrier = new HeaderCarrier()
 
       val combinedEvent = ExampleCombinedEvent("TestFilingId", "More Info", "cleverPassword", "Unknown")
 
@@ -42,19 +42,19 @@ class CombinedEventSpec extends AnyWordSpecLike with Matchers with MockitoSugar 
       }
 
       val assertingLoggerEventHandler = new LoggerEventHandler {
-        override def handleLoggable(loggable: Loggable) = {
+        override def handleLoggable(loggable: Loggable): Unit = {
           loggable shouldBe combinedEvent
         }
       }
 
       val assertingMetricEventHandler = new MetricsEventHandler {
-        override def handleMeasurable(measurable: Measurable) = {
+        override def handleMeasurable(measurable: Measurable): Unit = {
           measurable shouldBe combinedEvent
         }
       }
 
       val assertingAlertEventHandler = new AlertEventHandler {
-        override def handleAlertable(alertable: Alertable) = {
+        override def handleAlertable(alertable: Alertable): Unit = {
           alertable shouldBe combinedEvent
         }
       }

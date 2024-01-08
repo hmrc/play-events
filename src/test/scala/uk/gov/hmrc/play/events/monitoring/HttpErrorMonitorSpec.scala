@@ -31,7 +31,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 
 class HttpErrorMonitorSpec extends AnyWordSpecLike with MockitoSugar with Matchers {
 
-  implicit val hc = new HeaderCarrier()
+  implicit val hc: HeaderCarrier = new HeaderCarrier()
 
   "HttpErrorMonitor" should {
 
@@ -39,11 +39,11 @@ class HttpErrorMonitorSpec extends AnyWordSpecLike with MockitoSugar with Matche
 
       override def source: String = "This-Test"
 
-      val mockHandler = mock[EventHandler]
+      val mockHandler: EventHandler = mock[EventHandler]
 
-      override def eventHandlers = Set(mockHandler)
+      override def eventHandlers: Set[EventHandler] = Set(mockHandler)
 
-      val response = UpstreamErrorResponse("Error Msg", 403, 60)
+      val response: UpstreamErrorResponse = UpstreamErrorResponse("Error Msg", 403, 60)
 
       intercept[UpstreamErrorResponse] {
         Await.result(
@@ -63,11 +63,11 @@ class HttpErrorMonitorSpec extends AnyWordSpecLike with MockitoSugar with Matche
 
       override def source: String = "This-Test"
 
-      val mockHandler = mock[EventHandler]
+      val mockHandler: EventHandler = mock[EventHandler]
 
-      override def eventHandlers = Set(mockHandler)
+      override def eventHandlers: Set[EventHandler] = Set(mockHandler)
 
-      val response = UpstreamErrorResponse("Error Msg", 403, 60)
+      val response: UpstreamErrorResponse = UpstreamErrorResponse("Error Msg", 403, 60)
 
       intercept[UpstreamErrorResponse] {
         Await.result(
@@ -86,11 +86,11 @@ class HttpErrorMonitorSpec extends AnyWordSpecLike with MockitoSugar with Matche
     "generate Alert and Monitor events for HTTP 5XX error with NO alert code" in new HttpErrorMonitor {
       override def source: String = "This-Test"
 
-      val mockHandler = mock[EventHandler]
+      val mockHandler: EventHandler = mock[EventHandler]
 
-      override def eventHandlers = Set(mockHandler)
+      override def eventHandlers: Set[EventHandler] = Set(mockHandler)
 
-      val response = UpstreamErrorResponse("Error Msg", 500, 60)
+      val response: UpstreamErrorResponse = UpstreamErrorResponse("Error Msg", 500, 60)
 
       intercept[UpstreamErrorResponse] {
         Await.result(
@@ -110,11 +110,11 @@ class HttpErrorMonitorSpec extends AnyWordSpecLike with MockitoSugar with Matche
     "generate Alert and Monitor events for HTTP 5XX error with alert code" in new HttpErrorMonitor {
       override def source: String = "This-Test"
 
-      val mockHandler = mock[EventHandler]
+      val mockHandler: EventHandler = mock[EventHandler]
 
-      override def eventHandlers = Set(mockHandler)
+      override def eventHandlers: Set[EventHandler] = Set(mockHandler)
 
-      val response = UpstreamErrorResponse("Error Msg", 500, 60)
+      val response: UpstreamErrorResponse = UpstreamErrorResponse("Error Msg", 500, 60)
 
       intercept[UpstreamErrorResponse] {
         Await.result(
@@ -135,12 +135,12 @@ class HttpErrorMonitorSpec extends AnyWordSpecLike with MockitoSugar with Matche
 
       override def source: String = "This-Test"
 
-      val mockHandler = mock[EventHandler]
+      val mockHandler: EventHandler = mock[EventHandler]
 
-      override def eventHandlers = Set(mockHandler)
+      override def eventHandlers: Set[EventHandler] = Set(mockHandler)
 
       val exception4XX = new HttpException("Error Msg", 400)
-      val event4XX = DefaultHttpErrorEvent(source, exception4XX, Unknown)
+      val event4XX: DefaultHttpErrorEvent = DefaultHttpErrorEvent(source, exception4XX, Unknown)
 
       event4XX.level should be (MAJOR)
 
@@ -162,12 +162,12 @@ class HttpErrorMonitorSpec extends AnyWordSpecLike with MockitoSugar with Matche
 
       override def source: String = "This-Test"
 
-      val mockHandler = mock[EventHandler]
+      val mockHandler: EventHandler = mock[EventHandler]
 
-      override def eventHandlers = Set(mockHandler)
+      override def eventHandlers: Set[EventHandler] = Set(mockHandler)
 
       val exception4XX = new HttpException("Error Msg", 400)
-      val event4XX = DefaultHttpErrorEvent(source, exception4XX, "test-code")
+      val event4XX: DefaultHttpErrorEvent = DefaultHttpErrorEvent(source, exception4XX, "test-code")
 
       event4XX.level should be (MAJOR)
 
@@ -189,12 +189,12 @@ class HttpErrorMonitorSpec extends AnyWordSpecLike with MockitoSugar with Matche
 
       override def source: String = "This-Test"
 
-      val mockHandler = mock[EventHandler]
+      val mockHandler: EventHandler = mock[EventHandler]
 
-      override def eventHandlers = Set(mockHandler)
+      override def eventHandlers: Set[EventHandler] = Set(mockHandler)
 
       val exception5XX = new HttpException("Error Msg", 502)
-      val event5XX = DefaultHttpErrorEvent(source, exception5XX, Unknown)
+      val event5XX: DefaultHttpErrorEvent = DefaultHttpErrorEvent(source, exception5XX, Unknown)
 
       event5XX.level should be (CRITICAL)
 
@@ -216,12 +216,12 @@ class HttpErrorMonitorSpec extends AnyWordSpecLike with MockitoSugar with Matche
 
       override def source: String = "This-Test"
 
-      val mockHandler = mock[EventHandler]
+      val mockHandler: EventHandler = mock[EventHandler]
 
-      override def eventHandlers = Set(mockHandler)
+      override def eventHandlers: Set[EventHandler] = Set(mockHandler)
 
       val exception5XX = new HttpException("Error Msg", 502)
-      val event5XX = DefaultHttpErrorEvent(source, exception5XX, "test-code")
+      val event5XX: DefaultHttpErrorEvent = DefaultHttpErrorEvent(source, exception5XX, "test-code")
 
       event5XX.level should be (CRITICAL)
 
@@ -243,9 +243,9 @@ class HttpErrorMonitorSpec extends AnyWordSpecLike with MockitoSugar with Matche
 
       override def source: String = "This-Test"
 
-      val mockHandler = mock[EventHandler]
+      val mockHandler: EventHandler = mock[EventHandler]
 
-      override def eventHandlers = Set(mockHandler)
+      override def eventHandlers: Set[EventHandler] = Set(mockHandler)
 
       Await.result(
 

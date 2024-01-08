@@ -30,7 +30,7 @@ class EventRecorderSpec extends AnyWordSpecLike with MockitoSugar {
   "EventRecorder" should {
 
     "send events to all handlers" in {
-        implicit val hc = HeaderCarrier()
+        implicit val hc: HeaderCarrier = HeaderCarrier()
 
         val testHandlerOne = mock[EventHandler]
         val testHandlerTwo = mock[EventHandler]

@@ -29,7 +29,7 @@ object DefaultLoggerEventHandler extends LoggerEventHandler {
 
 trait LoggerEventHandler extends EventHandler {
 
-  def handleLoggable(loggable: Loggable)
+  def handleLoggable(loggable: Loggable): Unit
 
   override def handle(event: Recordable)(implicit headerCarrier: HeaderCarrier, ec: ExecutionContext): Unit = event match {
     case loggable: Loggable => handleLoggable(loggable)

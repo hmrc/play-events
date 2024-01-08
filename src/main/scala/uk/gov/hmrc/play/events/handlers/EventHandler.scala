@@ -22,5 +22,5 @@ import uk.gov.hmrc.play.events.Recordable
 import scala.concurrent.ExecutionContext
 
 trait EventHandler {
-  def handle(recordable: Recordable)(implicit headerCarrier: HeaderCarrier, ec: ExecutionContext)
+  def handle(recordable: Recordable)(implicit headerCarrier: HeaderCarrier, ec: ExecutionContext): Unit
 }

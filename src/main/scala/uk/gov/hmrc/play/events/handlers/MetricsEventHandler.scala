@@ -29,7 +29,7 @@ object DefaultMetricsEventHandler extends MetricsEventHandler {
 
 trait MetricsEventHandler extends EventHandler {
 
-  def handleMeasurable(measurable: Measurable)
+  def handleMeasurable(measurable: Measurable): Unit
 
   override def handle(event: Recordable)(implicit headerCarrier: HeaderCarrier, ec: ExecutionContext): Unit = {
     event match {

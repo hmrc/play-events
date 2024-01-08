@@ -25,13 +25,13 @@ import scala.concurrent.ExecutionContext.Implicits.global
 
 class MetricEventHandlerSpec extends AnyWordSpecLike with Matchers {
 
-  implicit val hc = HeaderCarrier()
+  implicit val hc: HeaderCarrier = HeaderCarrier()
 
   "MetricsEventHandler" should {
 
     "handle Metric events" in new MetricsEventHandler {
 
-      val metricsEvent = ExampleMetricEvent("TestFilingID", "TestFilingType")
+      val metricsEvent: ExampleMetricEvent = ExampleMetricEvent("TestFilingID", "TestFilingType")
 
       handle(metricsEvent)
 
@@ -41,7 +41,7 @@ class MetricEventHandlerSpec extends AnyWordSpecLike with Matchers {
     }
 
     "not handle Logger events" in new MetricsEventHandler {
-      val loggerEvent = new Loggable {
+      val loggerEvent: Loggable = new Loggable {
         override def log: String = "test"
       }
 

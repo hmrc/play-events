@@ -29,7 +29,7 @@ object DefaultAlertEventHandler extends AlertEventHandler {
 
 trait AlertEventHandler extends EventHandler {
 
-  def handleAlertable(alertable: Alertable)
+  def handleAlertable(alertable: Alertable): Unit
 
   override def handle(recordable: Recordable)(implicit headerCarrier: HeaderCarrier, ec: ExecutionContext): Unit = recordable match {
     case alertable: Alertable => handleAlertable(alertable)
