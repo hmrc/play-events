@@ -12,7 +12,7 @@ object AppDependencies {
   lazy val test: Seq[ModuleID] = Seq(
     "uk.gov.hmrc" %% s"bootstrap-test-$playVersion" % bootstrapVersion,
     "org.scalatestplus"  %% "mockito-4-2"  % "3.2.11.0"
-  ).map(_ % "test, it")
+  ).map(_ % "test")
 
   val all: Seq[sbt.ModuleID] = compile ++ test
 }
