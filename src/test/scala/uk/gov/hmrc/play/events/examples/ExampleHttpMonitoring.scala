@@ -51,7 +51,7 @@ object ExampleHttpErrorCountEvent {
 
   private val Source = "TestApp"
 
-  def apply(source: String, response: UpstreamErrorResponse, alertCode: AlertCode) = {
+  def apply(source: String, response: UpstreamErrorResponse, alertCode: AlertCode): DefaultHttpErrorCountEvent = {
     response match {
       case UpstreamErrorResponse.Upstream4xxResponse(_) =>
         new DefaultHttpErrorCountEvent(

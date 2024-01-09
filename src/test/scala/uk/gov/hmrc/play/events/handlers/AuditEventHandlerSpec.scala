@@ -28,11 +28,11 @@ import scala.concurrent.ExecutionContext.Implicits.global
 
 class AuditEventHandlerSpec extends AnyWordSpecLike with MockitoSugar {
 
-  implicit val hc = HeaderCarrier()
+  implicit val hc: HeaderCarrier = HeaderCarrier()
 
-  val mockAuditConnector = mock[AuditConnector]
+  val mockAuditConnector: AuditConnector = mock[AuditConnector]
 
-  val handler = new AuditEventHandler {
+  val handler: AuditEventHandler = new AuditEventHandler {
     override val auditConnector: AuditConnector = mockAuditConnector
   }
 

@@ -30,18 +30,18 @@ import scala.concurrent.ExecutionContext.Implicits.global
 
 class AllMonitoringSpec extends AnyWordSpecLike with MockitoSugar with Matchers {
 
-  implicit val hc = new HeaderCarrier()
+  implicit val hc: HeaderCarrier = new HeaderCarrier()
 
   "HttpErrorMonitor, HttpErrorCountMonitor and HttpTimer" should {
 
     "generate Alert and Monitor events for HTTP error with alert code" in new HttpErrorMonitor with HttpErrorCountMonitor with Timer {
       override def source: String = "This-Test"
 
-      val mockHandler = mock[EventHandler]
+      val mockHandler: EventHandler = mock[EventHandler]
 
-      override def eventHandlers = Set(mockHandler)
+      override def eventHandlers: Set[EventHandler] = Set(mockHandler)
 
-      val response = UpstreamErrorResponse("Error Msg", 500, 60)
+      val response: UpstreamErrorResponse = UpstreamErrorResponse("Error Msg", 500, 60)
 
       intercept[UpstreamErrorResponse] {
         Await.result(

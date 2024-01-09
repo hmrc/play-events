@@ -24,7 +24,7 @@ case class DefaultHttpErrorCountEvent(source: String,
                                       data: Map[String, String]) extends Measurable
 
 object DefaultHttpErrorCountEvent {
-  def apply(source: String, response: UpstreamErrorResponse, alertCode: AlertCode) = {
+  def apply(source: String, response: UpstreamErrorResponse, alertCode: AlertCode): DefaultHttpErrorCountEvent = {
     response match {
       case UpstreamErrorResponse.Upstream4xxResponse(_) =>
         new DefaultHttpErrorCountEvent(

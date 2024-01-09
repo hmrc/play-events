@@ -28,7 +28,7 @@ case class DefaultHttpErrorEvent(source: String,
 
 object DefaultHttpErrorEvent {
 
-  def apply(source: String, response: UpstreamErrorResponse, alertCode: AlertCode) = {
+  def apply(source: String, response: UpstreamErrorResponse, alertCode: AlertCode): DefaultHttpErrorEvent = {
     response match {
       case UpstreamErrorResponse.Upstream4xxResponse(_) =>
         new DefaultHttpErrorEvent(

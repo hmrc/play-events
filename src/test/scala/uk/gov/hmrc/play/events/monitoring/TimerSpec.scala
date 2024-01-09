@@ -35,13 +35,13 @@ import scala.concurrent.ExecutionContext.Implicits.global
 
 class TimerSpec extends AnyWordSpecLike with MockitoSugar with Matchers {
 
-  implicit val hc = new HeaderCarrier()
+  implicit val hc: HeaderCarrier = new HeaderCarrier()
 
   val TolerancePercentage = 10
 
-  val TimeToSleep = 1000 * 1000 * 1000 nanos
+  val TimeToSleep: FiniteDuration = 1000 * 1000 * 1000 nanos
 
-  def testFuture = Future{
+  def testFuture: Future[AlertCode] = Future{
     TimeUnit.NANOSECONDS.sleep(TimeToSleep.length)
 
     "Hello"
@@ -53,11 +53,11 @@ class TimerSpec extends AnyWordSpecLike with MockitoSugar with Matchers {
     "generate Monitor events containing call duration with NO alert code" in new Timer {
       override def source: String = "This-Test"
 
-      val mockHandler = mock[EventHandler]
+      val mockHandler: EventHandler = mock[EventHandler]
 
-      override def eventHandlers = Set(mockHandler)
+      override def eventHandlers: Set[EventHandler] = Set(mockHandler)
 
-      val result = Await.result(
+      val result: AlertCode = Await.result(
 
         timer()(testFuture),
         10 seconds
@@ -71,11 +71,11 @@ class TimerSpec extends AnyWordSpecLike with MockitoSugar with Matchers {
     "generate Monitor events containing call duration with alert code" in new Timer {
       override def source: String = "This-Test"
 
-      val mockHandler = mock[EventHandler]
+      val mockHandler: EventHandler = mock[EventHandler]
 
-      override def eventHandlers = Set(mockHandler)
+      override def eventHandlers: Set[EventHandler] = Set(mockHandler)
 
-      val result = Await.result(
+      val result: AlertCode = Await.result(
 
         timer("test-code")(testFuture),
         10 seconds

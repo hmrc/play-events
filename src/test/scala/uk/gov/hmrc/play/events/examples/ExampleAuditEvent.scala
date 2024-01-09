@@ -37,7 +37,7 @@ object ExampleAuditEvent {
 
   private def buildAuditData(count: Int, name: String) = {
       Map(
-        "Test Name" -> name.toString,
+        "Test Name" -> name,
         "Tests Run" -> count.toString
       )
   }

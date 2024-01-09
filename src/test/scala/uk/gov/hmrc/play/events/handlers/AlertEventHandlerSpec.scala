@@ -25,13 +25,13 @@ import scala.concurrent.ExecutionContext.Implicits.global
 
 class AlertEventHandlerSpec extends AnyWordSpecLike with Matchers {
 
-  implicit val hc = HeaderCarrier()
+  implicit val hc: HeaderCarrier = HeaderCarrier()
 
   "AlertEventHandler" should {
 
     "handle Alert events" in new AlertEventHandler {
 
-      val alertEvent = ExampleAlertEvent(new IllegalStateException("There ain't no state!"), "Unknown")
+      val alertEvent: ExampleAlertEvent = ExampleAlertEvent(new IllegalStateException("There ain't no state!"), "Unknown")
 
       handle(alertEvent)
 
@@ -41,7 +41,7 @@ class AlertEventHandlerSpec extends AnyWordSpecLike with Matchers {
     }
 
     "not handle Logger events" in new AlertEventHandler {
-      val loggerEvent = new Loggable {
+      val loggerEvent: Loggable = new Loggable {
         override def log: String = "test"
       }
 
