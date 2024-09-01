@@ -61,7 +61,7 @@ object ExampleHttpErrorCountEvent {
             "Count" -> "1"
           )
         )
-      case UpstreamErrorResponse.Upstream5xxResponse(_) =>
+      case _ =>
         new DefaultHttpErrorCountEvent(
           source = Source,
           name = s"Http5xxErrorCount-$alertCode",

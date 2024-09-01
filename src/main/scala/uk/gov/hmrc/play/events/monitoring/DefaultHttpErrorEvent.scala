@@ -42,7 +42,7 @@ object DefaultHttpErrorEvent {
             "Report As" -> response.reportAs.toString
           )
         )
-      case UpstreamErrorResponse.Upstream5xxResponse(_) =>
+      case _ =>
         new DefaultHttpErrorEvent(
           source = source,
           name = "Http5xxError",

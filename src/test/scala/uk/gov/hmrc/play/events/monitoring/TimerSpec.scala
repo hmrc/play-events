@@ -114,10 +114,10 @@ class DefaultTimerEventMatcher(source: String, alertCode: AlertCode, expected: D
   }
 
   def describeTo(description: Description): Unit = description.appendText(f"DefaultTimerEvent($source,Timer-$alertCode,")
-                                                              .appendText(f"Map(Duration -> ${expected.toNanos}%,.0f±$toleranceDelta%,.0f, Unit -> $Unit))")
+                                                              .appendText(f"Map(Duration -> ${expected.toNanos.toDouble}%,.0f±${toleranceDelta.toDouble}%,.0f, Unit -> $Unit))")
                                                               .appendText("\n")
-                                                              .appendText(f" ${expected.toNanos}%,.0f±$toleranceDelta%,.0f means that we want the duration")
-                                                              .appendText(f" in nanoseconds to be between $lowerBound%,.0f and $upperBound%,.0f inclusive")
+                                                              .appendText(f" ${expected.toNanos.toDouble}%,.0f±${toleranceDelta.toDouble}%,.0f means that we want the duration")
+                                                              .appendText(f" in nanoseconds to be between ${lowerBound.toDouble}%,.0f and ${upperBound.toDouble}%,.0f inclusive")
                                                               .appendText(f" (the tolerance is currently set to $tolerancePercentage percent either side of")
-                                                              .appendText(f" ${expected.toNanos}%,.0f nanoseconds)")
+                                                              .appendText(f" ${expected.toNanos.toDouble}%,.0f nanoseconds)")
 }

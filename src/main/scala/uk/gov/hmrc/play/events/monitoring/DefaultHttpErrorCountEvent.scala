@@ -34,7 +34,7 @@ object DefaultHttpErrorCountEvent {
             "Count" -> "1"
           )
         )
-      case UpstreamErrorResponse.Upstream5xxResponse(_) =>
+      case _ =>
         new DefaultHttpErrorCountEvent(
           source = source,
           name = "Http5xxErrorCount",
