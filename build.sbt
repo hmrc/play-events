@@ -6,7 +6,6 @@ import uk.gov.hmrc.versioning.SbtGitVersioning.autoImport.majorVersion
 val appName = "play-events"
 
 lazy val PlayEvents = (project in file("."))
-  .enablePlugins(SbtAutoBuildPlugin)
   .settings(
     name := appName,
     majorVersion := 2,
