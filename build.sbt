@@ -1,5 +1,4 @@
 import sbt.Keys._
-import uk.gov.hmrc.SbtAutoBuildPlugin
 import uk.gov.hmrc.DefaultBuildSettings._
 import uk.gov.hmrc.versioning.SbtGitVersioning.autoImport.majorVersion
 
@@ -15,3 +14,4 @@ lazy val PlayEvents = (project in file("."))
     libraryDependencies ++= AppDependencies.all,
     scalacOptions ++= Seq("-feature", "-language:postfixOps")
   )
+  .disablePlugins(JUnitXmlReportPlugin) //Required to prevent https://github.com/scalatest/scalatest/issues/1427
